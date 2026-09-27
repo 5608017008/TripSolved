@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="sk">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Rakúsy – kiosková prezentácia</title>
+<style>
+:root{--bg:#08131f;--panel:rgba(8,19,31,.64);--text:#fff;--muted:#d9e7f2;--accent:#9fe1ff}
+*{box-sizing:border-box} html,body{margin:0;width:100%;height:100%;background:var(--bg);font-family:Inter,Segoe UI,Arial,sans-serif;color:var(--text);overflow:hidden}
+#app{position:relative;width:100vw;height:100vh;background:#000}
+.slide{position:absolute;inset:0;opacity:0;pointer-events:none;transition:opacity .65s ease;background-size:cover;background-position:center}
+.slide.active{opacity:1;pointer-events:auto}
+.slide:before{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.15),rgba(0,0,0,.25) 35%,rgba(0,0,0,.78) 100%)}
+.content{position:absolute;left:5vw;right:5vw;bottom:6vh;z-index:2;background:var(--panel);backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,.18);border-radius:26px;padding:28px}
+.eyebrow{font-size:clamp(14px,1.8vw,22px);letter-spacing:.16em;text-transform:uppercase;color:var(--accent);font-weight:700}
+h1{font-size:clamp(34px,5.4vw,72px);line-height:1.02;margin:.28em 0 .22em}
+p{font-size:clamp(18px,2.3vw,30px);line-height:1.35;margin:0;color:var(--muted)}
+.nav{position:absolute;top:3vh;left:4vw;right:4vw;z-index:5;display:flex;justify-content:space-between;align-items:center}
+.brand{font-weight:800;font-size:clamp(18px,2vw,28px);text-shadow:0 2px 12px #000}
+.counter{font-size:clamp(14px,1.5vw,20px);background:rgba(0,0,0,.45);padding:10px 14px;border-radius:999px}
+.controls{position:absolute;z-index:6;right:4vw;bottom:3vh;display:flex;gap:12px}
+button,a.btn{border:1px solid rgba(255,255,255,.35);background:rgba(0,0,0,.5);color:#fff;border-radius:999px;padding:14px 18px;font-size:18px;text-decoration:none;cursor:pointer}
+.dots{position:absolute;z-index:5;left:4vw;bottom:3.5vh;display:flex;gap:8px;flex-wrap:wrap;max-width:55vw}
+.dot{width:10px;height:10px;border-radius:50%;background:rgba(255,255,255,.35)}
+.dot.active{background:#fff;transform:scale(1.2)}
+@media (orientation:portrait){
+.content{left:5vw;right:5vw;bottom:8vh;padding:24px;border-radius:22px}
+h1{font-size:clamp(38px,8vw,74px)}
+p{font-size:clamp(20px,4vw,32px)}
+.controls{bottom:2.5vh}
+.dots{bottom:3.4vh;max-width:45vw}
+}
+</style>
+</head>
+<body>
+<div id="app">
+  <div class="nav"><div class="brand">RAKÚSY × TRIPSOLVED</div><div class="counter" id="counter"></div></div>
+
+  <section class="slide active" style="background-image:url('../RAKUSY_KIOSK_APPROVED_PHOTOS/12_OTHER_BOSS_APPROVED/1000048727.jpg')">
+    <div class="content"><div class="eyebrow">Interaktívny turistický kiosk</div><h1>Rakúsy pod Tatrami</h1><p>Dotyková prezentácia obce, prírody, výletov, cyklistiky, ubytovania a regionálnych inšpirácií pre 32″ vertikálny displej.</p></div>
+  </section>
+
+  <section class="slide" style="background-image:url('../RAKUSY_KIOSK_APPROVED_PHOTOS/12_OTHER_BOSS_APPROVED/1000048721.jpg')">
+    <div class="content"><div class="eyebrow">Obec</div><h1>Rakúsy – skutočná krajina</h1><p>Autentické fotografie, jasná orientácia a jednoduché dotykové ovládanie bez zbytočného textu.</p></div>
+  </section>
+
+  <section class="slide" style="background-image:url('../RAKUSY_KIOSK_APPROVED_PHOTOS/12_OTHER_BOSS_APPROVED/1000048725.jpg')">
+    <div class="content"><div class="eyebrow">Výhľady a príroda</div><h1>Slnečné lúky pod Tatrami</h1><p>Tipy na nenáročné výlety, oddych v prírode a miesta, ktoré návštevník dokáže objaviť priamo z kiosku.</p></div>
+  </section>
+
+  <section class="slide" style="background-image:url('../RAKUSY_KIOSK_APPROVED_PHOTOS/12_OTHER_BOSS_APPROVED/1000048729.jpg')">
+    <div class="content"><div class="eyebrow">Turistika</div><h1>Tatry na dosah</h1><p>Prehľad výletov a horských možností s dôrazom na rýchle rozhodnutie návštevníka: kam ísť, čo vidieť a čo si vziať so sebou.</p></div>
+  </section>
+
+  <section class="slide" style="background-image:url('../RAKUSY_KIOSK_APPROVED_PHOTOS/12_OTHER_BOSS_APPROVED/1000048723.jpg')">
+    <div class="content"><div class="eyebrow">Cyklistika</div><h1>Podtatranská krajina</h1><p>Trasy a lokálne objavovanie pre rekreačných cyklistov aj rodiny.</p></div>
+  </section>
+
+  <section class="slide" style="background-image:url('../RAKUSY_KIOSK_APPROVED_PHOTOS/12_OTHER_BOSS_APPROVED/1000048726.jpg')">
+    <div class="content"><div class="eyebrow">Ubytovanie a gastronómia</div><h1>Oddych a lokálne chute</h1><p>Kiosk môže návštevníka nasmerovať k pobytu, jedlu a miestnym službám bez zdĺhavého hľadania.</p></div>
+  </section>
+
+  <section class="slide" style="background-image:url('../RAKUSY_KIOSK_APPROVED_PHOTOS/12_OTHER_BOSS_APPROVED/1000048730.jpg')">
+    <div class="content"><div class="eyebrow">TripSolved</div><h1>Inšpirácie na ďalšie cesty</h1><p>Rakúsy kiosk je zároveň vstupom do cestovateľských inšpirácií TripSolved a pokračovania v mobile cez QR kód.</p></div>
+  </section>
+
+  <section class="slide" style="background-image:url('../RAKUSY_KIOSK_APPROVED_PHOTOS/12_OTHER_BOSS_APPROVED/1000048732.jpg')">
+    <div class="content"><div class="eyebrow">ProcureTrace EU</div><h1>Technológia, ktorá slúži návštevníkovi</h1><p>Prezentácia je navrhnutá pre dotykový kiosk: veľké prvky, automatický návrat, prehľadné sekcie a jednoduché ovládanie.</p></div>
+  </section>
+
+  <section class="slide" style="background-image:url('../RAKUSY_KIOSK_APPROVED_PHOTOS/12_OTHER_BOSS_APPROVED/1000048728.jpg')">
+    <div class="content"><div class="eyebrow">Pripravené na nasadenie</div><h1>32″ dotykový kiosk – Rakúsy</h1><p>Softvér, schválené fotografie a verejná verzia sú pripravené. Ďalší krok je už len fyzické spustenie na iiyama displeji.</p></div>
+  </section>
+
+  <div class="dots" id="dots"></div>
+  <div class="controls">
+    <button id="prev" aria-label="Predchádzajúci">‹</button>
+    <button id="next" aria-label="Ďalší">›</button>
+    <a class="btn" href="../rakusy-showcase/" target="_blank" rel="noopener">Otvoriť živý kiosk</a>
+  </div>
+</div>
+<script>
+const slides=[...document.querySelectorAll('.slide')], dotsWrap=document.getElementById('dots'), counter=document.getElementById('counter');
+let i=0,timer;
+slides.forEach((_,n)=>{const d=document.createElement('span');d.className='dot'+(n===0?' active':'');d.onclick=()=>show(n);dotsWrap.appendChild(d)});
+const dots=[...document.querySelectorAll('.dot')];
+function show(n){i=(n+slides.length)%slides.length;slides.forEach((s,k)=>s.classList.toggle('active',k===i));dots.forEach((d,k)=>d.classList.toggle('active',k===i));counter.textContent=(i+1)+' / '+slides.length;restart()}
+function restart(){clearInterval(timer);timer=setInterval(()=>show(i+1),9000)}
+document.getElementById('prev').onclick=()=>show(i-1);document.getElementById('next').onclick=()=>show(i+1);
+document.addEventListener('keydown',e=>{if(e.key==='ArrowRight'||e.key===' ')show(i+1);if(e.key==='ArrowLeft')show(i-1)});
+let sx=0;document.addEventListener('touchstart',e=>sx=e.touches[0].clientX,{passive:true});document.addEventListener('touchend',e=>{const dx=e.changedTouches[0].clientX-sx;if(Math.abs(dx)>60)show(i+(dx<0?1:-1))},{passive:true});
+show(0);
+</script>
+</body>
+</html>
