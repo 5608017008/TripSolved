@@ -148,10 +148,49 @@ h1{font-size:clamp(54px,10vw,94px);line-height:.9;letter-spacing:-.055em;margin:
     <div class="visualContent"><span class="kicker">Obec pod Tatrami</span><h2>Rakúsy</h2><p>Skutočná obec, skutočná krajina a prirodzená brána k zážitkom v podtatranskom regióne.</p></div>
   </div>
   <div class="panels">
-    <div class="panel"><h3>🏘️ Obec</h3><p>Rýchly vstup k základným informáciám o obci a jej okolí.</p></div>
-    <div class="panel"><h3>🌄 Krajina</h3><p>Výhľady, lúky a horské scenérie priamo zo schválených fotografií.</p></div>
-    <div class="panel"><h3>🥾 Výlet</h3><p>Lokálne inšpirácie pre krátky pobyt aj aktívny deň.</p></div>
-    <div class="panel"><h3>📱 Pokračovanie</h3><p>Oficiálne informácie obce otvoríte cez QR kód v mobile.</p></div>
+    <button class="panel" onclick="openS('obec-detail')" style="text-align:left;color:inherit"><h3>🏘️ Obec</h3><p>Základné informácie, orientácia a praktické odkazy.</p></button>
+    <button class="panel" onclick="openS('krajina-detail')" style="text-align:left;color:inherit"><h3>🌄 Krajina</h3><p>Výhľady, lúky a horské scenérie zo schválených fotografií.</p></button>
+    <button class="panel" onclick="openS('vylet-detail')" style="text-align:left;color:inherit"><h3>🥾 Výlet</h3><p>Konkrétne lokálne inšpirácie pre krátky pobyt aj aktívny deň.</p></button>
+    <button class="panel" onclick="openS('qr')" style="text-align:left;color:inherit"><h3>📱 Pokračovanie</h3><p>Oficiálne informácie obce a ďalšie odkazy cez QR kód.</p></button>
+  </div>
+</section>
+
+
+<section id="obec-detail" class="screen">
+  <div class="screenTop"><button class="back" onclick="openS('rakusy')">← Späť</button><div class="screenTitle">Rakúsy – obec</div><button class="ghost" onclick="openS('qr')">QR</button></div>
+  <div class="visual" style="background-image:url('../RAKUSY_KIOSK_APPROVED_PHOTOS/12_OTHER_BOSS_APPROVED/1000048721.jpg')">
+    <div class="visualContent"><span class="kicker">Praktické informácie</span><h2>Obec Rakúsy</h2><p>Prehľadná vstupná obrazovka pre návštevníka: obec, okolie, užitočné informácie a pokračovanie na oficiálny web.</p></div>
+  </div>
+  <div class="panels">
+    <div class="panel"><h3>📍 Orientácia</h3><p>Rakúsy ležia v podtatranskom regióne a kiosk slúži ako rýchly štart pre návštevníka.</p></div>
+    <div class="panel"><h3>ℹ️ Užitočné informácie</h3><p>Praktické obecné informácie smerujeme na oficiálny web cez QR, aby boli vždy aktuálne.</p></div>
+    <div class="panel"><h3>🌄 Okolie</h3><p>Obec je východiskovým bodom pre výlety, výhľady a ďalšie podtatranské zážitky.</p></div>
+    <div class="panel"><h3>📱 Oficiálny web</h3><p>Naskenujte QR a pokračujte na stránke obce Rakúsy vo svojom mobile.</p></div>
+  </div>
+</section>
+
+<section id="krajina-detail" class="screen">
+  <div class="screenTop"><button class="back" onclick="openS('rakusy')">← Späť</button><div class="screenTitle">Rakúsy – krajina</div><button class="ghost" onclick="openS('hike')">Turistika</button></div>
+  <div class="visual" style="background-image:url('../RAKUSY_KIOSK_APPROVED_PHOTOS/12_OTHER_BOSS_APPROVED/1000048725.jpg')">
+    <div class="visualContent"><span class="kicker">Krajina pod Tatrami</span><h2>Výhľady a príroda</h2><p>Schválené fotografie zachytávajú otvorenú podtatranskú krajinu, lúky a horské scenérie.</p></div>
+  </div>
+  <div class="panels">
+    <div class="panel"><h3>🌿 Lúky a pokoj</h3><p>Priestor na prechádzku, oddych a pomalšie objavovanie regiónu.</p></div>
+    <div class="panel"><h3>📷 Fotogenické miesta</h3><p>Výhľady a krajina sú prirodzenou súčasťou návštevy Rakús.</p></div>
+    <div class="panel wide"><h3>🥾 Pokračovať na turistiku</h3><p>Pre konkrétne výletové inšpirácie pokračujte do sekcie Príroda a turistika.</p></div>
+  </div>
+</section>
+
+<section id="vylet-detail" class="screen">
+  <div class="screenTop"><button class="back" onclick="openS('rakusy')">← Späť</button><div class="screenTitle">Rakúsy – výlet</div><button class="ghost" onclick="openS('tripsolved')">TripSolved</button></div>
+  <div class="visual" style="background-image:url('../RAKUSY_KIOSK_APPROVED_PHOTOS/12_OTHER_BOSS_APPROVED/1000048722.jpg')">
+    <div class="visualContent"><span class="kicker">Lokálna inšpirácia</span><h2>Vyberte si výlet</h2><p>Kiosk ponúkne návštevníkovi konkrétne možnosti podľa času: krátka návšteva, aktívny deň alebo 3-dňový pobyt.</p></div>
+  </div>
+  <div class="panels">
+    <button class="panel" onclick="openS('trip1')" style="text-align:left;color:inherit"><h3>🗓️ 3 dni pod Tatrami</h3><p>Rakúsy, výhľady, Belianska jaskyňa, turistika a oddych.</p></button>
+    <button class="panel" onclick="openS('hike')" style="text-align:left;color:inherit"><h3>🥾 Príroda a turistika</h3><p>Výlet podľa počasia, času a kondície.</p></button>
+    <button class="panel" onclick="openS('bike')" style="text-align:left;color:inherit"><h3>🚲 Cyklistika</h3><p>Podtatranská krajina pre aktívny deň.</p></button>
+    <button class="panel" onclick="openS('tripsolved')" style="text-align:left;color:inherit"><h3>✈️ TripSolved</h3><p>Ak chcete celý pobyt poskladať do jedného plánu.</p></button>
   </div>
 </section>
 
