@@ -75,13 +75,84 @@ h1{font-size:clamp(54px,10vw,94px);line-height:.9;letter-spacing:-.055em;margin:
 .footer{padding:20px;text-align:center;color:#83a6b1;font-size:12px}
 @media(max-width:900px){.nav{display:none}.bandGrid{grid-template-columns:1fr 1fr}.grid3{grid-template-columns:1fr 1fr}.qrGrid{grid-template-columns:1fr}.hero{min-height:680px}}
 @media(max-width:620px){.top{height:72px}.brand{font-size:20px}.hero{min-height:650px}.heroContent{padding:36px 18px 24px}.grid2,.grid3,.productGrid,.panels{grid-template-columns:1fr}.wide{grid-column:auto}.card{min-height:300px}.visual{min-height:480px}.visualContent{padding:26px 18px}.bandGrid{grid-template-columns:1fr 1fr}.cta{flex-direction:column;align-items:flex-start}.cta button{width:100%}}
+
+/* 32-inch portrait kiosk optimization */
+@media (orientation:portrait) and (min-width:700px){
+  body{font-size:18px}
+  .top{
+    height:auto;min-height:118px;padding:14px 22px;
+    display:grid;grid-template-columns:1fr;gap:12px
+  }
+  .brand{font-size:28px}
+  .brand small{font-size:12px}
+  .nav{
+    display:grid!important;
+    grid-template-columns:repeat(5,1fr);
+    width:100%;gap:8px
+  }
+  .nav button{padding:14px 8px;font-size:15px;white-space:nowrap}
+  .hero{min-height:58svh;background-position:center 40%}
+  .heroContent{padding:48px 34px 38px}
+  h1{font-size:clamp(70px,10vw,110px);max-width:780px}
+  .hero p{font-size:30px;max-width:760px}
+  .bigBtn{font-size:22px;padding:20px 24px;border-radius:22px}
+  .band{padding:18px 22px}
+  .bandGrid{grid-template-columns:1fr 1fr;gap:14px}
+  .stat{min-height:170px;padding:22px;border-radius:24px}
+  .stat b{font-size:31px}
+  .stat span{font-size:18px;line-height:1.35}
+  .tapHint{font-size:15px;padding:10px 13px}
+  .section{padding:34px 22px 12px}
+  .sectionHead h2{font-size:46px}
+  .sectionHead p{font-size:20px}
+  .grid2,.grid3{grid-template-columns:1fr 1fr;gap:16px}
+  .card{min-height:420px;border-radius:30px}
+  .cardBody{padding:26px}
+  .card h3{font-size:34px}
+  .card p{font-size:18px}
+  .productGrid,.panels{grid-template-columns:1fr 1fr;gap:16px;padding:22px}
+  .product{min-height:280px;padding:24px;border-radius:28px}
+  .product h3{font-size:30px}
+  .product p{font-size:18px}
+  .product .mini{font-size:15px}
+  .visual{min-height:48svh;background-position:center}
+  .visualContent{padding:40px 30px}
+  .visual h2{font-size:72px}
+  .visual p{font-size:27px;max-width:760px}
+  .screenTop{height:88px;padding:12px 20px}
+  .screenTitle{font-size:18px}
+  .back,.ghost{font-size:18px;padding:14px 18px}
+  .panel{min-height:220px;padding:26px;border-radius:26px}
+  .panel h3{font-size:29px}
+  .panel p{font-size:19px}
+  .qrGrid{grid-template-columns:1fr;gap:18px;padding:22px 120px}
+  .qr{padding:22px;border-radius:28px}
+  .qr img{width:300px}
+  .qr h3{font-size:28px}
+  .qr p{font-size:18px}
+  .cta{margin:28px 22px 34px;padding:28px;border-radius:30px}
+  .cta h3{font-size:36px}
+  .cta p{font-size:20px}
+  .cta button{font-size:20px;padding:18px 22px}
+  .autoBadge{font-size:15px;padding:13px 16px;right:20px;bottom:20px}
+}
+
+/* Narrow phones remain readable without dictating kiosk proportions */
+@media (max-width:699px){
+  .nav{display:none!important}
+  .hero{min-height:640px}
+  .grid2,.grid3,.productGrid,.panels{grid-template-columns:1fr}
+  .bandGrid{grid-template-columns:1fr 1fr}
+  .qrGrid{grid-template-columns:1fr;padding:16px}
+}
+
 </style>
 </head>
 <body>
 <div class="app">
 <div id="home">
 <header class="top">
-  <div class="brand"><div class="logoDot">✦</div><div>Rakúsy × TripSolved<small>kiosk by ProcureTrace EU • FINAL v3</small></div></div>
+  <div class="brand"><div class="logoDot">✦</div><div>Rakúsy × TripSolved<small>kiosk by ProcureTrace EU • FINAL v4 PORTRAIT</small></div></div>
   <nav class="nav">
     <button onclick="openS('rakusy')">Rakúsy</button>
     <button onclick="openS('tripsolved')">TripSolved</button>
