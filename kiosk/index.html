@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="sk"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>TripSolved — Slovensko a svet</title>
+<style>
+:root{color-scheme:dark;font-family:system-ui,sans-serif}*{box-sizing:border-box}body{margin:0;background:#08283c;color:white}
+main{position:relative;min-height:100svh;overflow:hidden;display:grid;place-items:end start}
+.slide{position:absolute;inset:0;background-position:center;background-size:contain;background-repeat:no-repeat;background-color:#061c2b;opacity:0;transition:opacity 1.6s ease}
+.slide.active{opacity:1}.shade{position:absolute;inset:0;background:linear-gradient(transparent 35%,#001723e8)}
+.panel{position:relative;z-index:1;padding:clamp(1.5rem,5vw,5rem);max-width:900px}
+h1{font-size:clamp(2.3rem,6vw,5rem);margin:.1em 0}p{font-size:clamp(1.1rem,2vw,1.6rem)}
+a{display:inline-block;background:#0d9488;color:white;padding:1rem 1.5rem;border-radius:.75rem;font-weight:700;text-decoration:none}
+.status{position:absolute;z-index:2;top:1rem;right:1rem;background:#08283cbd;padding:.5rem 1rem;border-radius:1rem}
+@media(prefers-reduced-motion:reduce){.slide{transition:none}}
+</style></head><body>
+<main><div id="slides"></div><div class="shade"></div><div class="status" id="status">TripSolved</div>
+<section class="panel"><small>TRIPSOLVED CONCIERGE · SLOVENSKO A SVET</small><h1 id="place">Objavte Slovensko</h1>
+<p>Vašu ďalšiu cestu pripravíme na mieru. Plán cesty: 9,90 €.</p>
+<a id="cta" href="#">Chcem plán cesty</a></section></main>
+<script>
+/* Assets must be approved ORIGINAL photographs in ./photos/. Never replace with stock. */
+const approved=[
+{file:"1000052766.jpg",label:"Štrbské Pleso"},
+{file:"1000052764.jpg",label:"Vysoké Tatry — Štrbské Pleso"},
+{file:"1000052688.jpg",label:"Pieniny a Zamagurie"},
+{file:"1000052684.jpg",label:"Pieniny — Dunajec"}
+];
+/* Set the verified production order URL during deployment; fail closed until then. */
+const bookingUrl="";
+const cta=document.getElementById("cta");
+if(bookingUrl.startsWith("https://"))cta.href=bookingUrl;
+else{cta.removeAttribute("href");cta.textContent="Objednávka bude dostupná po overení";cta.style.opacity=".65";}
+const slides=document.getElementById("slides"),place=document.getElementById("place"),status=document.getElementById("status");
+let ready=[],idx=0;
+Promise.all(approved.map(x=>new Promise(resolve=>{let im=new Image();im.onload=()=>resolve(x);im.onerror=()=>resolve(null);im.src="./photos/"+encodeURIComponent(x.file)}))).then(found=>{
+ready=found.filter(Boolean);
+if(!ready.length){status.textContent="Fotografie čakajú na nasadenie";return;}
+ready.forEach((x,i)=>{let div=document.createElement("div");div.className="slide"+(i===0?" active":"");div.style.backgroundImage='url("./photos/'+encodeURIComponent(x.file)+'")';slides.append(div)});
+const show=()=>{[...slides.children].forEach((el,i)=>el.classList.toggle("active",i===idx));place.textContent="Objavte Slovensko";status.textContent=(idx+1)+" / "+ready.length};
+show();if(!matchMedia("(prefers-reduced-motion: reduce)").matches)setInterval(()=>{idx=(idx+1)%ready.length;show()},10000);
+});
+</script></body></html>
