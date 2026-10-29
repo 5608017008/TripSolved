@@ -4,7 +4,7 @@
 <style>
 :root{color-scheme:dark;font-family:system-ui,sans-serif}*{box-sizing:border-box}body{margin:0;background:#08283c;color:white}
 main{position:relative;min-height:100svh;overflow:hidden;display:grid;place-items:end start}
-.slide{position:absolute;inset:0;background-position:center;background-size:cover;opacity:0;transition:opacity 1.6s ease}
+.slide{position:absolute;inset:0;background-position:center;background-size:contain;background-repeat:no-repeat;background-color:#061c2b;opacity:0;transition:opacity 1.6s ease}
 .slide.active{opacity:1}.shade{position:absolute;inset:0;background:linear-gradient(transparent 35%,#001723e8)}
 .panel{position:relative;z-index:1;padding:clamp(1.5rem,5vw,5rem);max-width:900px}
 h1{font-size:clamp(2.3rem,6vw,5rem);margin:.1em 0}p{font-size:clamp(1.1rem,2vw,1.6rem)}
@@ -35,7 +35,7 @@ Promise.all(approved.map(x=>new Promise(resolve=>{let im=new Image();im.onload=(
 ready=found.filter(Boolean);
 if(!ready.length){status.textContent="Fotografie čakajú na nasadenie";return;}
 ready.forEach((x,i)=>{let div=document.createElement("div");div.className="slide"+(i===0?" active":"");div.style.backgroundImage='url("./photos/'+encodeURIComponent(x.file)+'")';slides.append(div)});
-const show=()=>{[...slides.children].forEach((el,i)=>el.classList.toggle("active",i===idx));place.textContent=ready[idx].label;status.textContent=(idx+1)+" / "+ready.length};
+const show=()=>{[...slides.children].forEach((el,i)=>el.classList.toggle("active",i===idx));place.textContent="Objavte Slovensko";status.textContent=(idx+1)+" / "+ready.length};
 show();if(!matchMedia("(prefers-reduced-motion: reduce)").matches)setInterval(()=>{idx=(idx+1)%ready.length;show()},10000);
 });
 </script></body></html>
