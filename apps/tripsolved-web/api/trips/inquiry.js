@@ -14,7 +14,7 @@ export default async function handler(req,res){
  const dates=typeof b.dates==='string'?b.dates.trim():'';
  const travelers=Number(b.travelers);
  const budget=b.budgetEur==null||b.budgetEur===''?null:Number(b.budgetEur);
- if(description.length<8||description.length>3000||email.length>254||!/^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/.test(email)||departure.length>160||dates.length>160||!Number.isInteger(travelers)||travelers<1||travelers>30||(budget!==null&&(!Number.isFinite(budget)||budget<1||budget>1000000)))return respond(res,400,{error:'Invalid trip inquiry'});
+ if(description.length<8||description.length>3000||email.length>254||!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)||departure.length>160||dates.length>160||!Number.isInteger(travelers)||travelers<1||travelers>30||(budget!==null&&(!Number.isFinite(budget)||budget<1||budget>1000000)))return respond(res,400,{error:'Invalid trip inquiry'});
  // Turnstile tokens are verified server-side. A client-supplied header is not security.
  const token=typeof b.turnstileToken==='string'?b.turnstileToken:'';
  if(!token||token.length>2048)return respond(res,403,{error:'Security verification required'});
@@ -23,7 +23,7 @@ export default async function handler(req,res){
   const result=await verification.json();
   if(!result.success)return respond(res,403,{error:'Security verification failed'});
  }catch{return respond(res,503,{error:'Security verification unavailable'});}
- const text=['TripSolved — nový nezáväzný cestovný dopyt','Kontakt: '+email,'Počet osôb: '+travelers,'Odchod: '+departure,'Termín: '+dates,'Rozpočet EUR: '+(budget??'neuvedený'),'Zadanie:',description].join('\\n');
+ const text=['TripSolved — nový nezáväzný cestovný dopyt','Kontakt: '+email,'Počet osôb: '+travelers,'Odchod: '+departure,'Termín: '+dates,'Rozpočet EUR: '+(budget??'neuvedený'),'Zadanie:',description].join('\n');
  const controller=new AbortController();const timer=setTimeout(()=>controller.abort(),10000);
  try{
   const upstream=await fetch('https://api.resend.com/emails',{method:'POST',signal:controller.signal,headers:{Authorization:'Bearer '+process.env.RESEND_API_KEY,'Content-Type':'application/json'},body:JSON.stringify({from:'TripSolved <tripsolved@nexisdata.eu>',to:['office@nexisdata.eu'],reply_to:email,subject:'TripSolved — nový nezáväzný dopyt',text})});
