@@ -18,12 +18,13 @@ export default function handler(req,res){
  const mountain=/hor[ay]|turistik|tatry|hiking|prírod|prirod/.test(t);
  const flight=/letieť|leten|lietadl|odlet|flight|airport/.test(t+' '+departure.toLocaleLowerCase('sk'));
  const interests=[...(seaside?['Pláž a kúpanie']:[]),...(city?['Pamiatky a mesto']:[]),...(mountain?['Príroda a turistika']:[])];
+ const people=travelers===1?'1 osobu':travelers>=2&&travelers<=4?travelers+' osoby':travelers+' osôb';
  const steps=[
   'Upresni cieľovú destináciu a počet nocí, ak ešte nie sú uvedené.',
   'Over dostupné termíny a podmienky zrušenia priamo u poskytovateľov.',
-  flight?'Porovnaj lety vrátane batožiny, prestupov a dopravy z letiska.':'Porovnaj vhodnú dopravu vrátane času cesty a prestupov.',
+  flight?'Porovnaj lety vrátane batožiny, prestupov a dopravy z letiska.':'Porovnaj vhodnú dopravu vrátane času cesty a prestupov; pri vzdialenej destinácii over aj letecké spojenia.',
   seaside?'Vyber ubytovanie podľa skutočnej vzdialenosti od pláže a typu stravy.':mountain?'Over náročnosť trás, počasie a dostupnosť dopravy.':'Vyber ubytovanie podľa polohy, dostupnosti a podmienok.',
   'Pred platbou over konečnú cenu, storno podmienky a cestovné doklady.'
  ];
- return json(res,200,{status:'draft_ready',kind:'rule_based_draft',title:'Predbežný plán tvojej cesty',summary:`Cesta pre ${travelers} ${travelers===1?'osobu':'osoby/osôb'}${departure?' z '+departure:''}${dates?' v termíne '+dates:''}.`,interests,steps,budgetEur:budget,verifiedPrices:[],bookingAvailable:false,liveSearchAvailable:false,disclaimer:'Toto je orientačný plán podľa pravidiel, nie AI itinerár. Ceny, dostupnosť ani rezervácie nie sú overené.'});
+ return json(res,200,{status:'draft_ready',kind:'rule_based_draft',title:'Predbežný plán tvojej cesty',summary:`Cesta pre ${people}${departure?' s odchodom z miesta '+departure:''}${dates?' v termíne '+dates:''}.`,interests,steps,budgetEur:budget,verifiedPrices:[],bookingAvailable:false,liveSearchAvailable:false,disclaimer:'Toto je orientačný plán podľa pravidiel, nie AI itinerár. Ceny, dostupnosť ani rezervácie nie sú overené.'});
 }
