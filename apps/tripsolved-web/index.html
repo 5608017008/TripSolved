@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="sk"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#102b36"><meta name="description" content="TripSolved: opíš cestu a získaj orientačný itinerár po dňoch. Bez platby a bez rezervácie."><link rel="manifest" href="/manifest.webmanifest"><link rel="icon" href="/icon.svg" type="image/svg+xml"><title>TripSolved — cestuj po svojom</title>
+<style>:root{font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;color:#132b37;background:#f4f7f8}*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:radial-gradient(circle at 90% 10%,#dcefe9 0,transparent 35%),linear-gradient(180deg,#eef6f5,#f9fbfb 60%);min-height:100vh}header{background:#102b36;color:#fff;padding:20px max(22px,calc((100vw - 1080px)/2));display:flex;justify-content:space-between;align-items:center;gap:15px}header strong{font-size:1.35rem;letter-spacing:-.04em}header span{font-size:.86rem;color:#c4e2df}main{max-width:1020px;margin:auto;padding:50px 22px 60px}.eyebrow{display:inline-block;color:#087b78;background:#d9eeea;border-radius:999px;padding:8px 13px;font-size:.78rem;font-weight:800;letter-spacing:.09em;text-transform:uppercase}.hero{max-width:780px;margin:0 0 28px}h1{font-size:clamp(2.5rem,7vw,5rem);line-height:1.04;letter-spacing:-.055em;margin:18px 0 20px;font-weight:800}.sub{color:#536b75;font-size:clamp(1rem,2.2vw,1.18rem);max-width:650px;line-height:1.65}p{line-height:1.6}.panel{background:#fff;border:1px solid #dce9e8;border-radius:24px;padding:clamp(20px,4vw,40px);box-shadow:0 18px 70px rgba(18,51,61,.10)}.panel-heading{margin:0 0 24px;font-size:1.3rem;letter-spacing:-.02em}.fields{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px;margin-top:18px}label{font-weight:700;font-size:.9rem;display:block;margin-bottom:8px}input,textarea{width:100%;padding:15px;border:1px solid #b9cecf;border-radius:12px;font:inherit;background:#fbfdfd;color:#132b37;transition:border-color .2s,box-shadow .2s}textarea{min-height:145px;resize:vertical}input:focus,textarea:focus{border-color:#087b78;box-shadow:0 0 0 3px #c6e8e3;outline:none}button{cursor:pointer;background:#087b78;color:white;border:0;padding:15px 23px;border-radius:12px;font-weight:750;font:inherit;transition:background .2s,transform .2s}button:hover{background:#065d5b}button:active{transform:translateY(1px)}button:focus-visible,a:focus-visible{outline:3px solid #dfaa42;outline-offset:3px}button:disabled{opacity:.5;cursor:not-allowed}.actions{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin-top:22px}.note{font-size:.88rem;color:#5b747d}.result{margin-top:28px;background:#f0faf7;border:1px solid #a7d8cf;border-radius:16px;padding:clamp(16px,3vw,28px)}.result h2{margin-top:0}.result h3{font-size:1.3rem}.result li{padding:5px 0;line-height:1.6}.hidden{display:none}dl{display:grid;grid-template-columns:145px 1fr;gap:12px}dt{font-weight:700}dd{margin:0;overflow-wrap:anywhere}a{color:#086b6a}.trust{display:flex;gap:12px;flex-wrap:wrap;margin:20px 0 28px}.trust span{background:#fff;border:1px solid #dce9e8;border-radius:100px;padding:9px 14px;font-size:.83rem;color:#48656e}.how{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:15px;margin:24px 0 34px}.how div{padding:18px;background:#fff;border:1px solid #e0eae9;border-radius:15px}.how b{display:block;margin-bottom:5px;color:#0b605e}.how small{color:#647981;line-height:1.5}footer{padding:30px 18px;text-align:center;color:#60747b}@media(max-width:620px){main{padding:32px 16px 50px}header{padding:17px 18px}.fields,.how{grid-template-columns:1fr}dl{grid-template-columns:1fr;gap:3px}dd{margin-bottom:12px}.actions button{width:100%}.trust{gap:7px}.trust span{font-size:.76rem}}@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}button,input,textarea{transition:none}}</style></head>
+<body><header><strong>TripSolved</strong><label for="language" style="margin:0;color:#c4e2df"><span id="langLabel">Jazyk</span> <select id="language" aria-label="Language" style="background:#193f4b;color:white;border:1px solid #63848b;border-radius:9px;padding:9px;font:inherit;max-width:155px"><option value="sk">Slovenčina</option><option value="en">English</option><option value="de">Deutsch</option><option value="pl">Polski</option><option value="cs">Čeština</option><option value="hu">Magyar</option><option value="fr">Français</option><option value="es">Español</option><option value="it">Italiano</option></select></label></header>
+<main><div class="hero"><span class="eyebrow">Tvoja cesta, tvoj plán</span><h1>Začni cestu jednou vetou.</h1><p class="sub">Povedz nám, kam chceš ísť a čo chceš zažiť. TripSolved ti pripraví orientačný program po dňoch, ktorý si môžeš upraviť alebo poslať na individuálne preverenie.</p><div class="trust"><span>Bez registrácie</span><span>Bez platby</span><span>Bez rezervácie</span></div></div><div class="how"><div><b>01 · Opíš predstavu</b><small>Miesto, termín, počet ľudí a rozpočet podľa teba.</small></div><div><b>02 · Pozri si program</b><small>Prehľadný orientačný plán jednotlivých dní.</small></div><div><b>03 · Požiadaj o preverenie</b><small>Ak chceš, pošli nezáväzný dopyt e-mailom.</small></div></div>
+<p id="localeNotice" class="note">Orientačný plán podľa pravidiel. Bez overených cien a rezervácií.</p><section class="panel" aria-label="Zadanie cesty"><h2 class="panel-heading">Naplánuj svoju cestu</h2><form id="tripForm">
+<label for="request">Tvoja predstava o ceste</label><textarea id="request" maxlength="3000" required placeholder="Chceme ísť dvaja na týždeň k moru, odlet z Krakova alebo Košíc, hotel pri pláži, rozpočet do 1 500 €..."></textarea>
+<div class="fields"><div><label for="departure">Odkiaľ chceš vyraziť? (voliteľné)</label><input id="departure" maxlength="160" placeholder="Košice, Krakov..."></div>
+<div><label for="dates">Kedy? (voliteľné)</label><input id="dates" maxlength="160" placeholder="Jún alebo flexibilne"></div>
+<div><label for="travelers">Počet cestujúcich</label><input id="travelers" type="number" min="1" max="30" value="2" required></div>
+<div><label for="budget">Maximálny rozpočet v € (voliteľné)</label><input id="budget" type="number" min="1" max="1000000" step="1" placeholder="1500"></div></div>
+<div class="actions"><button type="submit">Pripraviť zadanie cesty</button><span class="note">Bez platby a bez rezervácie</span></div>
+</form><section id="result" class="result hidden" aria-live="polite"><h2>Tvoje zadanie je pripravené</h2><p>Táto verzia prijíma cestovné požiadavky. Živé ceny, AI plánovanie a rezervácie zatiaľ nie sú dostupné. Zadanie si môžeš skopírovať alebo odoslať nezáväznú žiadosť o individuálne preverenie. Odoslanie žiadosti neznamená potvrdenú službu ani rezerváciu.</p><dl id="summary"></dl><section id="plan" class="hidden" aria-label="Predbežný cestovný plán"><h3 id="planTitle"></h3><p id="planSummary"></p><section id="aiSection" class="hidden"><h4>AI návrh cesty</h4><p id="aiText" style="white-space:pre-wrap"></p><p class="note" id="aiDisclaimer"></p></section><h4>Program po dňoch (orientačný)</h4><ol id="itinerary"></ol><h4>Čo treba overiť</h4><ul id="planSteps"></ul><p class="note" id="planDisclaimer"></p></section><div class="actions"><button type="button" id="copy">Kopírovať zadanie</button><button type="button" id="inquiry">Požiadať o individuálne preverenie cesty</button><span id="copyStatus" role="status"></span></div><p class="note">Žiadosť sa pripraví na odoslanie na <a href="mailto:procuretrace.eu@gmail.com">procuretrace.eu@gmail.com</a>. E-mail musíš sám odoslať; bez odoslania ho nedostaneme. Ak sa e-mailová aplikácia neotvorí, skopíruj zadanie a pošli ho na uvedenú adresu.</p></section></section>
+<p class="note">TripSolved nezobrazuje neoverené ceny ako aktuálne. Plánovanie s overovaním letov, hotelov a platieb bude sprístupnené až po bezpečnom napojení príslušných služieb.</p></main><footer>TripSolved · Cestovanie podľa teba</footer>
+<script type="module">
+import { locales } from './planner-locales.js';
+(function(){
+'use strict';const localeSelectors=[".hero .sub",".trust span:nth-child(1)",".trust span:nth-child(2)",".trust span:nth-child(3)",".how div:nth-child(1) b",".how div:nth-child(2) b",".how div:nth-child(3) b","label[for=\"request\"]","label[for=\"departure\"]","label[for=\"dates\"]","label[for=\"travelers\"]","label[for=\"budget\"]","#tripForm .note","#result h2","#copy","#inquiry"];const localeOriginals=localeSelectors.map(x=>document.querySelector(x).textContent);const localeExtra={"en":["Describe where you want to go and what you want to experience. TripSolved prepares a preliminary day-by-day plan.","No registration","No payment","No booking","01 · Describe your trip","02 · View the itinerary","03 · Request a review","Your travel idea","Departure city (optional)","When? (optional)","Travelers","Maximum budget in € (optional)","Free, no booking","Your travel request is ready","Copy request","Request an individual trip review"],"de":["Beschreibe dein Reiseziel und deine Wünsche. TripSolved erstellt einen vorläufigen Reiseplan.","Ohne Anmeldung","Ohne Zahlung","Ohne Buchung","01 · Reise beschreiben","02 · Reiseplan ansehen","03 · Prüfung anfragen","Deine Reiseidee","Abreiseort (optional)","Wann? (optional)","Reisende","Maximales Budget in € (optional)","Kostenlos, ohne Buchung","Deine Anfrage ist bereit","Anfrage kopieren","Individuelle Prüfung anfragen"],"pl":["Opisz, dokąd chcesz pojechać. TripSolved przygotuje wstępny plan podróży.","Bez rejestracji","Bez płatności","Bez rezerwacji","01 · Opisz podróż","02 · Zobacz plan","03 · Poproś o weryfikację","Twój pomysł na podróż","Miasto wyjazdu (opcjonalnie)","Kiedy? (opcjonalnie)","Podróżni","Maksymalny budżet w € (opcjonalnie)","Bezpłatnie, bez rezerwacji","Twoje zapytanie jest gotowe","Kopiuj zapytanie","Poproś o indywidualną weryfikację"],"cs":["Popiš svou cestu. TripSolved připraví orientační plán po dnech.","Bez registrace","Bez platby","Bez rezervace","01 · Popiš cestu","02 · Prohlédni plán","03 · Požádej o ověření","Tvoje představa o cestě","Město odjezdu (volitelné)","Kdy? (volitelné)","Cestující","Maximální rozpočet v € (volitelné)","Zdarma, bez rezervace","Tvoje zadání je připravené","Kopírovat zadání","Požádat o individuální ověření"],"hu":["Írd le az utazási elképzelésed. A TripSolved előzetes napi tervet készít.","Regisztráció nélkül","Fizetés nélkül","Foglalás nélkül","01 · Írd le az utad","02 · Nézd meg a tervet","03 · Kérj ellenőrzést","Utazási elképzelés","Indulási város (nem kötelező)","Mikor? (nem kötelező)","Utasok","Maximális keret €-ban (nem kötelező)","Ingyenes, foglalás nélkül","A kérésed elkészült","Kérés másolása","Egyéni ellenőrzést kérek"],"fr":["Décrivez votre projet. TripSolved prépare un itinéraire indicatif jour par jour.","Sans inscription","Sans paiement","Sans réservation","01 · Décrivez le voyage","02 · Consultez le programme","03 · Demandez une vérification","Votre projet de voyage","Ville de départ (facultatif)","Quand ? (facultatif)","Voyageurs","Budget maximum en € (facultatif)","Gratuit, sans réservation","Votre demande est prête","Copier la demande","Demander une vérification personnalisée"],"es":["Describe tu viaje. TripSolved prepara un itinerario orientativo día a día.","Sin registro","Sin pago","Sin reserva","01 · Describe el viaje","02 · Consulta el plan","03 · Solicita una revisión","Tu idea de viaje","Ciudad de salida (opcional)","¿Cuándo? (opcional)","Viajeros","Presupuesto máximo en € (opcional)","Gratis, sin reserva","Tu solicitud está lista","Copiar solicitud","Solicitar revisión individual"],"it":["Descrivi il tuo viaggio. TripSolved prepara un itinerario indicativo giorno per giorno.","Senza registrazione","Senza pagamento","Senza prenotazione","01 · Descrivi il viaggio","02 · Guarda il programma","03 · Richiedi una verifica","La tua idea di viaggio","Città di partenza (facoltativa)","Quando? (facoltativo)","Viaggiatori","Budget massimo in € (facoltativo)","Gratis, senza prenotazione","La tua richiesta è pronta","Copia richiesta","Richiedi una verifica personalizzata"]};function applyExtraLocale(code){const t=localeExtra[code]||localeOriginals;localeSelectors.forEach((selector,i)=>{document.querySelector(selector).textContent=t[i]});}
+function localizeResult(code){
+ const l=locales[code];
+ document.querySelector('#result > p').textContent=l.resultDescription;
+ const headings=document.querySelectorAll('#plan > h4');
+ headings[0].textContent=l.dayHeading;headings[1].textContent=l.checksHeading;
+ document.querySelector('#aiSection h4').textContent=l.aiHeading;
+ document.getElementById('request').placeholder=l.requestPlaceholder;
+ document.getElementById('departure').placeholder=l.departurePlaceholder;
+ document.getElementById('dates').placeholder=l.datesPlaceholder;
+ document.getElementById('localeNotice').textContent=l.notice;
+ document.querySelector('.eyebrow').textContent=l.eyebrow;
+ document.querySelector('footer').textContent='TripSolved · '+l.footer;
+ document.querySelector('#result > p.note').textContent=l.mailNote;
+ document.querySelector('main > p.note:last-child').textContent=l.finalNote;
+ document.querySelectorAll('.how small').forEach((node,i)=>node.textContent=l['how'+(i+1)]);
+ document.querySelector('section.panel').setAttribute('aria-label',document.querySelector('.panel-heading').textContent);
+ document.getElementById('plan').setAttribute('aria-label',l.title);
+ document.getElementById('language').setAttribute('aria-label',l.language);
+ document.querySelector('meta[name="description"]').content=l.notice;
+ document.title='TripSolved — '+l.footer;
+ document.getElementById('result').classList.add('hidden');
+ document.getElementById('copyStatus').textContent='';
+}
+const translations={"sk":["Slovenčina","Začni cestu jednou vetou.","Naplánuj svoju cestu","Pripraviť zadanie cesty"],"en":["English","Start your journey with one sentence.","Plan your trip","Create an itinerary"],"de":["Deutsch","Deine Reise beginnt mit einem Satz.","Reise planen","Reiseplan erstellen"],"pl":["Polski","Rozpocznij podróż jednym zdaniem.","Zaplanuj podróż","Przygotuj plan"],"cs":["Čeština","Začni cestu jednou větou.","Naplánuj cestu","Připravit plán"],"hu":["Magyar","Kezdd az utazást egy mondattal.","Tervezd meg az utad","Útiterv készítése"],"fr":["Français","Votre voyage commence par une phrase.","Planifiez votre voyage","Créer un itinéraire"],"es":["Español","Empieza tu viaje con una frase.","Planifica tu viaje","Preparar itinerario"],"it":["Italiano","Inizia il viaggio con una frase.","Pianifica il viaggio","Prepara itinerario"]};const language=document.getElementById('language');function setLanguage(code){const t=translations[code]||translations.en;document.documentElement.lang=code;applyExtraLocale(code);localizeResult(code);document.getElementById('localeNotice').hidden=false;document.querySelector('.hero h1').textContent=t[1];document.querySelector('.panel-heading').textContent=t[2];document.querySelector('#tripForm button[type="submit"]').textContent=t[3];document.querySelector('#langLabel').textContent=locales[code].language;document.querySelector('section.panel').setAttribute('aria-label',t[2]);language.value=code;try{localStorage.setItem('tripsolved_language',code)}catch{}}let locale=new URLSearchParams(location.search).get('lang');if(!Object.hasOwn(translations,locale)){try{locale=localStorage.getItem('tripsolved_language')}catch{}}if(!Object.hasOwn(translations,locale))locale=(navigator.language||'en').split('-')[0];if(!Object.hasOwn(translations,locale))locale='en';setLanguage(locale);language.addEventListener('change',()=>setLanguage(language.value));
+const form=document.getElementById('tripForm'),result=document.getElementById('result'),summary=document.getElementById('summary'),status=document.getElementById('copyStatus');
+const button=form.querySelector('button[type="submit"]');
+let exportText='';
+const ui=()=>locales[language.value];
+const rows=[['request','Predstava'],['departure','Odlet'],['dates','Termín'],['travelers','Cestujúci'],['budget','Rozpočet']];const enRowLabels=['Travel idea','Departure','Dates','Travelers','Budget'];
+form.addEventListener('submit',async function(event){
+ event.preventDefault();
+ if(!form.reportValidity())return;
+ const values={};
+ for(const [id] of rows) values[id]=document.getElementById(id).value.trim();
+ summary.replaceChildren();document.getElementById('plan').classList.add('hidden');document.getElementById('aiSection').classList.add('hidden');
+ const parts=[];
+ for(const [index,[id,defaultLabel]] of rows.entries()){const label=document.querySelector('label[for="'+id+'"]').textContent;
+   let value=values[id];if(!value)continue;
+   if(id==='budget')value+=' €';
+   const dt=document.createElement('dt'),dd=document.createElement('dd');
+   dt.textContent=label;dd.textContent=value;summary.append(dt,dd);parts.push(label+': '+value);
+ }
+ exportText=parts.join('\n');
+ status.textContent=ui().ready;
+ result.classList.remove('hidden');
+ result.scrollIntoView({behavior:'smooth',block:'nearest'});
+ // The standalone prototype may not have an API deployed at the same origin.
+ // A failed API request never blocks local summary or invents travel results.
+ const controller=new AbortController();
+ const timeout=setTimeout(()=>controller.abort(),16000);
+ button.disabled=true;language.disabled=true;
+ try {
+   const response=await fetch('/api/trips/intake',{
+     method:'POST',headers:{'Content-Type':'application/json'},
+     body:JSON.stringify({description:values.request,departure:values.departure,dates:values.dates,travelers:Number(values.travelers),budgetEur:values.budget?Number(values.budget):null,locale:language.value}),
+     signal:controller.signal
+   });
+   const data=await response.json();
+   if(!response.ok||data.status!=='intake_accepted')throw new Error('API unavailable');
+   status.textContent=ui().loading;
+   try {
+     const planResponse=await fetch('/api/trips/plan',{
+       method:'POST',headers:{'Content-Type':'application/json'},
+       body:JSON.stringify({description:values.request,departure:values.departure,dates:values.dates,travelers:Number(values.travelers),budgetEur:values.budget?Number(values.budget):null,locale:language.value}),signal:controller.signal
+     });
+     const plan=await planResponse.json();
+     if(planResponse.ok&&plan.status==='draft_ready'){
+       document.getElementById('planTitle').textContent=plan.title;
+       document.getElementById('planSummary').textContent=plan.summary;
+       const dayList=document.getElementById('itinerary');dayList.replaceChildren();
+       for(const day of (plan.itinerary||[])){const li=document.createElement('li');li.textContent=(ui().day+' ')+day.day+': '+day.activity;dayList.append(li);}
+       const list=document.getElementById('planSteps');list.replaceChildren();
+       for(const step of plan.steps){const li=document.createElement('li');li.textContent=step;list.append(li);}
+       document.getElementById('planDisclaimer').textContent=plan.disclaimer;
+       document.getElementById('plan').classList.remove('hidden');
+       status.textContent=ui().complete;
+       // Optional AI is disabled by default; rule-based draft remains usable.
+       try{
+         const aiResponse=await fetch('/api/trips/ai',{
+           method:'POST',headers:{'Content-Type':'application/json'},
+           body:JSON.stringify({description:values.request,departure:values.departure,dates:values.dates,travelers:Number(values.travelers),budgetEur:values.budget?Number(values.budget):null,locale:language.value}),signal:controller.signal
+         });
+         if(aiResponse.ok){
+           const ai=await aiResponse.json();
+           if(ai.status==='ai_ready'&&typeof ai.text==='string'){
+             document.getElementById('aiText').textContent=ai.text;
+             document.getElementById('aiDisclaimer').textContent=ai.disclaimer;
+             document.getElementById('aiSection').classList.remove('hidden');
+             exportText+='\n\n'+ui().aiHeading+':\n'+ai.text;
+             status.textContent=ui().aiReady;
+           }
+         }
+       }catch{};
+       exportText+='\n\n'+plan.title+'\n'+(plan.itinerary||[]).map(x=>ui().day+' '+x.day+': '+x.activity).join('\n')+'\n'+plan.disclaimer+'\n'+plan.steps.map((x,i)=>(i+1)+'. '+x).join('\n');
+     }else{status.textContent=ui().unavailable;}
+   }catch{status.textContent=ui().unavailable;}
+ }catch{
+   status.textContent=ui().offline;
+ }finally{clearTimeout(timeout);button.disabled=false;language.disabled=false;}
+});
+document.getElementById('inquiry').addEventListener('click',function(){
+ const subject=ui().mailSubject;
+ const body=ui().mailBody+'\n\n'+exportText;
+ window.location.href='mailto:procuretrace.eu@gmail.com?subject='+encodeURIComponent(subject)+'&body='+encodeURIComponent(body);
+ status.textContent=ui().mailStatus;
+});
+document.getElementById('copy').addEventListener('click',async function(){
+ try{await navigator.clipboard.writeText(exportText);status.textContent=ui().copied;}
+ catch{status.textContent=ui().copyFailed;}
+});
+})();
+</script></body></html>
