@@ -29,7 +29,7 @@ export default function handler(req,res){
   city:['Príchod a orientácia v meste','Historické centrum a hlavné pamiatky','Múzeá alebo galérie podľa záujmu','Miestne štvrte a gastronómia','Výlet do okolia','Voľný program a rezervné vstupy','Odchod a návrat'],
   general:['Príchod a orientácia v destinácii','Hlavné zaujímavosti podľa záujmu','Aktívny program alebo výlet','Oddychový deň','Miestna kultúra a gastronómia','Voľný program podľa počasia','Odchod a návrat']
  };
- const itinerary=Array.from({length:days},(_,i)=>({day:i+1,activity:i===days-1?'Odchod a návrat':themes[focus][Math.min(i,5)]}));
+ const itinerary=Array.from({length:days},(_,i)=>({day:i+1,activity:i===days-1?'Odchod a návrat':i===0?themes[focus][0]:themes[focus][1+((i-1)%5)]}));
  const steps=[
   'Upresni cieľovú destináciu a počet nocí, ak ešte nie sú uvedené.',
   'Over dostupné termíny a podmienky zrušenia priamo u poskytovateľov.',
