@@ -27,3 +27,7 @@ test('rejects non JSON',()=>assert.equal(invoke('POST',{description:'Trip'},'tex
 
 test('seven-day seaside itinerary has arrival and departure',()=>{const r=invoke('POST',{description:'Týždeň pri mori',travelers:2});assert.equal(r.body.itinerary.length,7);assert.match(r.body.itinerary[0].activity,/Príchod/);assert.match(r.body.itinerary[6].activity,/Odchod/);});
 test('four-day default itinerary',()=>assert.equal(invoke('POST',{description:'Mestský pobyt',travelers:2}).body.itinerary.length,4));
+
+test('explicit 10 days are respected',()=>assert.equal(invoke('POST',{description:'Chceme 10 dní pri mori',travelers:2}).body.itinerary.length,10));
+test('two weeks produce 14 days',()=>assert.equal(invoke('POST',{description:'Chceme dva týždne pri mori',travelers:2}).body.itinerary.length,14));
+test('numeric two weeks produce 14 days',()=>assert.equal(invoke('POST',{description:'Chceme 2 týždne pri mori',travelers:2}).body.itinerary.length,14));
