@@ -19,6 +19,17 @@ export default function handler(req,res){
  const flight=/letieť|leten|lietadl|odlet|flight|airport/.test(t+' '+departure.toLocaleLowerCase('sk'));
  const interests=[...(seaside?['Pláž a kúpanie']:[]),...(city?['Pamiatky a mesto']:[]),...(mountain?['Príroda a turistika']:[])];
  const people=travelers===1?'1 osobu':travelers>=2&&travelers<=4?travelers+' osoby':travelers+' osôb';
+ const durationMatch=t.match(/(\\d{1,2})\\s*(?:dní|dni|dňa|nocí|noci|týždň|tyzdn)/);
+ const weeks=/dva\\s+týžd|dva\\s+tyzd|2\\s*týžd|2\\s*tyzd/.test(t);
+ const days=durationMatch?Math.min(14,Math.max(2,Number(durationMatch[1])*(/týžd|tyzd/.test(durationMatch[0])?7:1))):weeks?14:/týždeň|tyzden|týždňa|tyzdna/.test(t)?7:4;
+ const focus=seaside?'sea':mountain?'nature':city?'city':'general';
+ const themes={
+  sea:['Príchod, ubytovanie a pokojná orientácia v okolí','Oddych pri mori a preskúmanie pláží','Nenáročný výlet v okolí','Voľný deň podľa počasia','Miestna kultúra a gastronómia','Rezervný deň na obľúbené aktivity','Odchod a návrat'],
+  nature:['Príchod a kontrola predpovede počasia','Nenáročná trasa podľa kondície','Prírodné zaujímavosti v okolí','Oddych a alternatíva pri zlom počasí','Celodenný výlet s bezpečnou rezervou','Voľný deň alebo kratšia prechádzka','Odchod a návrat'],
+  city:['Príchod a orientácia v meste','Historické centrum a hlavné pamiatky','Múzeá alebo galérie podľa záujmu','Miestne štvrte a gastronómia','Výlet do okolia','Voľný program a rezervné vstupy','Odchod a návrat'],
+  general:['Príchod a orientácia v destinácii','Hlavné zaujímavosti podľa záujmu','Aktívny program alebo výlet','Oddychový deň','Miestna kultúra a gastronómia','Voľný program podľa počasia','Odchod a návrat']
+ };
+ const itinerary=Array.from({length:days},(_,i)=>({day:i+1,activity:i===days-1?'Odchod a návrat':themes[focus][Math.min(i,5)]}));
  const steps=[
   'Upresni cieľovú destináciu a počet nocí, ak ešte nie sú uvedené.',
   'Over dostupné termíny a podmienky zrušenia priamo u poskytovateľov.',
@@ -26,5 +37,5 @@ export default function handler(req,res){
   seaside?'Vyber ubytovanie podľa skutočnej vzdialenosti od pláže a typu stravy.':mountain?'Over náročnosť trás, počasie a dostupnosť dopravy.':'Vyber ubytovanie podľa polohy, dostupnosti a podmienok.',
   'Pred platbou over konečnú cenu, storno podmienky a cestovné doklady.'
  ];
- return json(res,200,{status:'draft_ready',kind:'rule_based_draft',title:'Predbežný plán tvojej cesty',summary:`Cesta pre ${people}${departure?' s odchodom z miesta '+departure:''}${dates?' v termíne '+dates:''}.`,interests,steps,budgetEur:budget,verifiedPrices:[],bookingAvailable:false,liveSearchAvailable:false,disclaimer:'Toto je orientačný plán podľa pravidiel, nie AI itinerár. Ceny, dostupnosť ani rezervácie nie sú overené.'});
+ return json(res,200,{status:'draft_ready',kind:'rule_based_draft',title:'Predbežný plán tvojej cesty',summary:`Cesta pre ${people}${departure?' s odchodom z miesta '+departure:''}${dates?' v termíne '+dates:''}.`,interests,steps,itinerary,estimatedDays:days,budgetEur:budget,verifiedPrices:[],bookingAvailable:false,liveSearchAvailable:false,disclaimer:'Toto je ilustračný itinerár podľa pravidiel, nie AI plán. Dĺžka môže byť odhadnutá zo zadania. Aktivity nie sú rezervované; ceny a dostupnosť nie sú overené.'});
 }
