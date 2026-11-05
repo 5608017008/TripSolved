@@ -24,7 +24,7 @@ jobs:
         with:
           node-version: '22'
       - name: Run API tests
-        run: node --test apps/tripsolved-api/server.test.mjs apps/tripsolved-web/api/trips/intake.test.mjs
+        run: node --test apps/tripsolved-api/server.test.mjs apps/tripsolved-web/api/trips/intake.test.mjs apps/tripsolved-web/api/trips/plan.test.mjs
       - name: Check server syntax
         run: node --check apps/tripsolved-api/server.mjs
       - name: Verify web markup and script existence
