@@ -12,8 +12,53 @@
 <div><label for="travelers">Počet cestujúcich</label><input id="travelers" type="number" min="1" max="30" value="2" required></div>
 <div><label for="budget">Maximálny rozpočet v € (voliteľné)</label><input id="budget" type="number" min="1" max="1000000" step="1" placeholder="1500"></div></div>
 <div class="actions"><button type="submit">Pripraviť zadanie cesty</button><span class="note">Bez platby a bez rezervácie</span></div>
-</form><section id="result" class="result hidden" aria-live="polite"><h2>Tvoje zadanie je pripravené</h2><p>Táto prvá verzia ešte nevyhľadáva živé ceny ani nevytvára rezervácie. Môžeš si skopírovať zadanie a pokračovať v plánovaní.</p><dl id="summary"></dl><div class="actions"><button type="button" id="copy">Kopírovať zadanie</button><span id="copyStatus" role="status"></span></div></section></section>
+</form><section id="result" class="result hidden" aria-live="polite"><h2>Tvoje zadanie je pripravené</h2><p>Táto verzia prijíma cestovné požiadavky. Živé ceny, AI plánovanie a rezervácie zatiaľ nie sú dostupné. Zadanie si môžeš skopírovať.</p><dl id="summary"></dl><div class="actions"><button type="button" id="copy">Kopírovať zadanie</button><span id="copyStatus" role="status"></span></div></section></section>
 <p class="note">TripSolved nezobrazuje neoverené ceny ako aktuálne. Plánovanie s overovaním letov, hotelov a platieb bude sprístupnené až po bezpečnom napojení príslušných služieb.</p></main><footer>TripSolved · Cestovanie podľa teba</footer>
 <script>
-(function(){'use strict';const form=document.getElementById('tripForm'),result=document.getElementById('result'),summary=document.getElementById('summary'),status=document.getElementById('copyStatus');let exportText='';const rows=[['request','Predstava'],['departure','Odlet'],['dates','Termín'],['travelers','Cestujúci'],['budget','Rozpočet']];form.addEventListener('submit',function(event){event.preventDefault();if(!form.reportValidity())return;summary.replaceChildren();const parts=[];for(const [id,label] of rows){let value=document.getElementById(id).value.trim();if(!value)continue;if(id==='budget')value+=' €';const dt=document.createElement('dt');dt.textContent=label;const dd=document.createElement('dd');dd.textContent=value;summary.append(dt,dd);parts.push(label+': '+value)}exportText=parts.join('\n');status.textContent='';result.classList.remove('hidden');result.scrollIntoView({behavior:'smooth',block:'nearest'})});document.getElementById('copy').addEventListener('click',async function(){try{await navigator.clipboard.writeText(exportText);status.textContent='Skopírované'}catch(e){status.textContent='Kopírovanie nie je dostupné. Označ a skopíruj údaje vyššie.'}})})();
+(function(){
+'use strict';
+const form=document.getElementById('tripForm'),result=document.getElementById('result'),summary=document.getElementById('summary'),status=document.getElementById('copyStatus');
+const button=form.querySelector('button[type="submit"]');
+let exportText='';
+const rows=[['request','Predstava'],['departure','Odlet'],['dates','Termín'],['travelers','Cestujúci'],['budget','Rozpočet']];
+form.addEventListener('submit',async function(event){
+ event.preventDefault();
+ if(!form.reportValidity())return;
+ const values={};
+ for(const [id] of rows) values[id]=document.getElementById(id).value.trim();
+ summary.replaceChildren();
+ const parts=[];
+ for(const [id,label] of rows){
+   let value=values[id];if(!value)continue;
+   if(id==='budget')value+=' €';
+   const dt=document.createElement('dt'),dd=document.createElement('dd');
+   dt.textContent=label;dd.textContent=value;summary.append(dt,dd);parts.push(label+': '+value);
+ }
+ exportText=parts.join('\n');
+ status.textContent='Zadanie je pripravené na skopírovanie.';
+ result.classList.remove('hidden');
+ result.scrollIntoView({behavior:'smooth',block:'nearest'});
+ // The standalone prototype may not have an API deployed at the same origin.
+ // A failed API request never blocks local summary or invents travel results.
+ const controller=new AbortController();
+ const timeout=setTimeout(()=>controller.abort(),5000);
+ button.disabled=true;
+ try {
+   const response=await fetch('/api/trips/intake',{
+     method:'POST',headers:{'Content-Type':'application/json'},
+     body:JSON.stringify({description:values.request,departure:values.departure,dates:values.dates,travelers:Number(values.travelers),budgetEur:values.budget?Number(values.budget):null}),
+     signal:controller.signal
+   });
+   const data=await response.json();
+   if(!response.ok||data.status!=='intake_accepted')throw new Error('API unavailable');
+   status.textContent='Zadanie spracované. Živé ceny a rezervácie ešte nie sú dostupné.';
+ }catch{
+   status.textContent='Server nie je pripojený. Zadanie je pripravené lokálne a môžeš ho skopírovať.';
+ }finally{clearTimeout(timeout);button.disabled=false;}
+});
+document.getElementById('copy').addEventListener('click',async function(){
+ try{await navigator.clipboard.writeText(exportText);status.textContent='Skopírované';}
+ catch{status.textContent='Kopírovanie nie je dostupné. Označ údaje vyššie.';}
+});
+})();
 </script></body></html>
