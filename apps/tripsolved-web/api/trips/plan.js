@@ -23,6 +23,13 @@ export default function handler(req,res){
  const weeks=/dva\s+týžd|dva\s+tyzd|2\s*týžd|2\s*tyzd/.test(t);
  const days=durationMatch?Math.min(14,Math.max(2,Number(durationMatch[1])*(/týžd|tyzd/.test(durationMatch[0])?7:1))):weeks?14:/týždeň|tyzden|týždňa|tyzdna/.test(t)?7:4;
  const focus=seaside?'sea':mountain?'nature':city?'city':'general';
+ const destinationPresets=[
+  {match:/\\blond[ýy]n|\\blondon/i,label:'Londýn',days:['Westminster, Big Ben a prechádzka popri Temži','British Museum a Covent Garden','Tower of London a Tower Bridge','Hyde Park, Kensington a voľný program']},
+  {match:/\\brovinj/i,label:'Rovinj',days:['Historické centrum Rovinja a prístav','Pláže a pobrežná prechádzka pri Zlatnom myse','Výlet do Puly podľa dopravy a záujmu','Oddych pri mori a miestna gastronómia']},
+  {match:/\\bgda[ňn]sk|\\bgdansk/i,label:'Gdansk',days:['Historické centrum a Dlhý trh','Nábrežie Motławy a Múzeum druhej svetovej vojny','Výlet do Sopotu podľa dopravy','Európske centrum Solidarity a voľný program']},
+  {match:/\\bedinburgh/i,label:'Edinburgh',days:['Royal Mile a historické centrum','Edinburgh Castle a Grassmarket','Arthur’s Seat podľa počasia a kondície','National Museum of Scotland a voľný program']}
+ ];
+ const destination=destinationPresets.find(p=>p.match.test(t));
  const themes={
   sea:['Príchod, ubytovanie a pokojná orientácia v okolí','Oddych pri mori a preskúmanie pláží','Nenáročný výlet v okolí','Voľný deň podľa počasia','Miestna kultúra a gastronómia','Rezervný deň na obľúbené aktivity','Odchod a návrat'],
   nature:['Príchod a kontrola predpovede počasia','Nenáročná trasa podľa kondície','Prírodné zaujímavosti v okolí','Oddych a alternatíva pri zlom počasí','Celodenný výlet s bezpečnou rezervou','Voľný deň alebo kratšia prechádzka','Odchod a návrat'],
@@ -30,6 +37,7 @@ export default function handler(req,res){
   general:['Príchod a orientácia v destinácii','Hlavné zaujímavosti podľa záujmu','Aktívny program alebo výlet','Oddychový deň','Miestna kultúra a gastronómia','Voľný program podľa počasia','Odchod a návrat']
  };
  const itinerary=Array.from({length:days},(_,i)=>({day:i+1,activity:i===days-1?'Odchod a návrat':i===0?themes[focus][0]:themes[focus][1+((i-1)%5)]}));
+ if(destination){for(let i=1;i<days-1;i++)itinerary[i].activity=destination.days[(i-1)%destination.days.length];}
  const steps=[
   'Upresni cieľovú destináciu a počet nocí, ak ešte nie sú uvedené.',
   'Over dostupné termíny a podmienky zrušenia priamo u poskytovateľov.',
@@ -37,5 +45,5 @@ export default function handler(req,res){
   seaside?'Vyber ubytovanie podľa skutočnej vzdialenosti od pláže a typu stravy.':mountain?'Over náročnosť trás, počasie a dostupnosť dopravy.':'Vyber ubytovanie podľa polohy, dostupnosti a podmienok.',
   'Pred platbou over konečnú cenu, storno podmienky a cestovné doklady.'
  ];
- return json(res,200,{status:'draft_ready',kind:'rule_based_draft',title:'Predbežný plán tvojej cesty',summary:`Cesta pre ${people}${departure?' s odchodom z miesta '+departure:''}${dates?' v termíne '+dates:''}.`,interests,steps,itinerary,estimatedDays:days,budgetEur:budget,verifiedPrices:[],bookingAvailable:false,liveSearchAvailable:false,disclaimer:'Toto je ilustračný itinerár podľa pravidiel, nie AI plán. Dĺžka môže byť odhadnutá zo zadania. Aktivity nie sú rezervované; ceny a dostupnosť nie sú overené.'});
+ return json(res,200,{status:'draft_ready',kind:'rule_based_draft',title:'Predbežný plán tvojej cesty',summary:`Cesta ${destination?'do destinácie '+destination.label+' ':''}pre ${people}${departure?' s odchodom z miesta '+departure:''}${dates?' v termíne '+dates:''}.`,interests,destination:destination?.label??null,steps,itinerary,estimatedDays:days,budgetEur:budget,verifiedPrices:[],bookingAvailable:false,liveSearchAvailable:false,disclaimer:'Toto je ilustračný itinerár podľa pravidiel, nie AI plán. Konkrétne miesta sú návrhy na návštevu, nie overené otvorené prevádzky. Dĺžka môže byť odhadnutá zo zadania. Aktivity nie sú rezervované; ceny a dostupnosť nie sú overené.'});
 }
