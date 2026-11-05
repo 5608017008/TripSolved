@@ -5,7 +5,7 @@ export default async function handler(req,res){
  res.setHeader('Cache-Control','no-store');
  if(req.method!=='POST'){res.setHeader('Allow','POST');return respond(res,405,{error:'Method not allowed'});}
  if(!(req.headers['content-type']||'').toLowerCase().startsWith('application/json'))return respond(res,415,{error:'JSON required'});
- if(process.env.TRIPSOLVED_INQUIRIES_ENABLED!=='true'||!process.env.RESEND_API_KEY||!process.env.TRIPSOLVED_INQUIRY_SECURITY_READY)return respond(res,503,{status:'inquiries_disabled'});
+ if(process.env.TRIPSOLVED_INQUIRIES_ENABLED!=='true'||!process.env.RESEND_API_KEY||process.env.TRIPSOLVED_INQUIRY_SECURITY_READY!=='true'||!process.env.TURNSTILE_SECRET_KEY)return respond(res,503,{status:'inquiries_disabled'});
  const b=req.body;
  if(!b||typeof b!=='object'||Array.isArray(b))return respond(res,400,{error:'Invalid request'});
  const description=typeof b.description==='string'?b.description.trim():'';
@@ -15,9 +15,14 @@ export default async function handler(req,res){
  const travelers=Number(b.travelers);
  const budget=b.budgetEur==null||b.budgetEur===''?null:Number(b.budgetEur);
  if(description.length<8||description.length>3000||email.length>254||!/^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/.test(email)||departure.length>160||dates.length>160||!Number.isInteger(travelers)||travelers<1||travelers>30||(budget!==null&&(!Number.isFinite(budget)||budget<1||budget>1000000)))return respond(res,400,{error:'Invalid trip inquiry'});
- // This token is issued only by a separately configured edge bot/rate-limit
- // service. Never enable the endpoint until that layer is installed and verified.
- if(req.headers['x-tripsolved-edge-verified']!=='1')return respond(res,403,{error:'Security verification required'});
+ // Turnstile tokens are verified server-side. A client-supplied header is not security.
+ const token=typeof b.turnstileToken==='string'?b.turnstileToken:'';
+ if(!token||token.length>2048)return respond(res,403,{error:'Security verification required'});
+ try{
+  const verification=await fetch('https://challenges.cloudflare.com/turnstile/v0/siteverify',{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:new URLSearchParams({secret:process.env.TURNSTILE_SECRET_KEY,response:token})});
+  const result=await verification.json();
+  if(!result.success)return respond(res,403,{error:'Security verification failed'});
+ }catch{return respond(res,503,{error:'Security verification unavailable'});}
  const text=['TripSolved — nový nezáväzný cestovný dopyt','Kontakt: '+email,'Počet osôb: '+travelers,'Odchod: '+departure,'Termín: '+dates,'Rozpočet EUR: '+(budget??'neuvedený'),'Zadanie:',description].join('\\n');
  const controller=new AbortController();const timer=setTimeout(()=>controller.abort(),10000);
  try{
