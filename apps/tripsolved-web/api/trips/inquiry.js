@@ -5,8 +5,10 @@ export default async function handler(req,res){
  res.setHeader('Cache-Control','no-store');
  if(req.method!=='POST'){res.setHeader('Allow','POST');return respond(res,405,{error:'Method not allowed'});}
  if(!(req.headers['content-type']||'').toLowerCase().startsWith('application/json'))return respond(res,415,{error:'JSON required'});
- if(process.env.TRIPSOLVED_INQUIRIES_ENABLED!=='true'||!process.env.RESEND_API_KEY||process.env.TRIPSOLVED_INQUIRY_SECURITY_READY!=='true'||!process.env.TURNSTILE_SECRET_KEY)return respond(res,503,{status:'inquiries_disabled'});
+ if(process.env.TRIPSOLVED_INQUIRIES_ENABLED!=='true'||!process.env.RESEND_API_KEY||process.env.TRIPSOLVED_INQUIRY_SECURITY_READY!=='true'||!process.env.TURNSTILE_SECRET_KEY||!process.env.TRIPSOLVED_INQUIRY_TO||!process.env.TRIPSOLVED_TURNSTILE_HOSTNAME)return respond(res,503,{status:'inquiries_disabled'});
  const b=req.body;
+ const recipient=process.env.TRIPSOLVED_INQUIRY_TO;
+ if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(recipient))return respond(res,503,{status:'inquiries_disabled'});
  if(!b||typeof b!=='object'||Array.isArray(b))return respond(res,400,{error:'Invalid request'});
  const description=typeof b.description==='string'?b.description.trim():'';
  const email=typeof b.email==='string'?b.email.trim():'';
@@ -21,12 +23,12 @@ export default async function handler(req,res){
  try{
   const verification=await fetch('https://challenges.cloudflare.com/turnstile/v0/siteverify',{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:new URLSearchParams({secret:process.env.TURNSTILE_SECRET_KEY,response:token})});
   const result=await verification.json();
-  if(!result.success)return respond(res,403,{error:'Security verification failed'});
+  if(!result.success||result.hostname!==process.env.TRIPSOLVED_TURNSTILE_HOSTNAME)return respond(res,403,{error:'Security verification failed'});
  }catch{return respond(res,503,{error:'Security verification unavailable'});}
  const text=['TripSolved — nový nezáväzný cestovný dopyt','Kontakt: '+email,'Počet osôb: '+travelers,'Odchod: '+departure,'Termín: '+dates,'Rozpočet EUR: '+(budget??'neuvedený'),'Zadanie:',description].join('\n');
  const controller=new AbortController();const timer=setTimeout(()=>controller.abort(),10000);
  try{
-  const upstream=await fetch('https://api.resend.com/emails',{method:'POST',signal:controller.signal,headers:{Authorization:'Bearer '+process.env.RESEND_API_KEY,'Content-Type':'application/json'},body:JSON.stringify({from:'TripSolved <tripsolved@nexisdata.eu>',to:['office@nexisdata.eu'],reply_to:email,subject:'TripSolved — nový nezáväzný dopyt',text})});
+  const upstream=await fetch('https://api.resend.com/emails',{method:'POST',signal:controller.signal,headers:{Authorization:'Bearer '+process.env.RESEND_API_KEY,'Content-Type':'application/json'},body:JSON.stringify({from:'TripSolved <tripsolved@nexisdata.eu>',to:[recipient],reply_to:email,subject:'TripSolved — nový nezáväzný dopyt',text})});
   if(!upstream.ok)return respond(res,502,{status:'delivery_unconfirmed'});
   const data=await upstream.json();
   if(!data.id)return respond(res,502,{status:'delivery_unconfirmed'});
