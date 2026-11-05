@@ -41,7 +41,7 @@ form.addEventListener('submit',async function(event){
  // The standalone prototype may not have an API deployed at the same origin.
  // A failed API request never blocks local summary or invents travel results.
  const controller=new AbortController();
- const timeout=setTimeout(()=>controller.abort(),5000);
+ const timeout=setTimeout(()=>controller.abort(),16000);
  button.disabled=true;
  try {
    const response=await fetch('/api/trips/intake',{
