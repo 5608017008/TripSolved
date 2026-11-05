@@ -1,3 +1,4 @@
+import { locales, normalizeLocale } from '../../planner-locales.js';
 // Transparent rule-based draft planner. No AI model, live suppliers or prices.
 const json=(res,status,data)=>res.status(status).json(data);
 export default function handler(req,res){
@@ -7,7 +8,7 @@ export default function handler(req,res){
  const b=req.body;
  if(!b||typeof b!=='object'||Array.isArray(b))return json(res,400,{error:'Invalid request'});
 
- const locale=typeof b.locale==='string'?b.locale.toLowerCase():'sk';
+ const locale=normalizeLocale(b.locale);
  const english=locale==='en';
  const description=typeof b.description==='string'?b.description.trim():'';
  const departure=typeof b.departure==='string'?b.departure.trim():'';
@@ -22,9 +23,14 @@ export default function handler(req,res){
  const flight=/letieť|leten|lietadl|odlet|flight|airport/.test(t+' '+departure.toLocaleLowerCase('sk'));
  const interests=[...(seaside?['Pláž a kúpanie']:[]),...(city?['Pamiatky a mesto']:[]),...(mountain?['Príroda a turistika']:[])];
  const people=travelers===1?'1 osobu':travelers>=2&&travelers<=4?travelers+' osoby':travelers+' osôb';
- const durationMatch=t.match(/(\d{1,2})\s*(?:dní|dni|dňa|nocí|noci|týždň|tyzdn|days?|nights?|weeks?|tage?|nächte|jours?|nuits?|días?|giorni|dni|nap|dny)/);
- const weeks=/dva\s+týžd|dva\s+tyzd|2\s*týžd|2\s*tyzd/.test(t);
- const days=durationMatch?Math.min(14,Math.max(2,Number(durationMatch[1])*(/týžd|tyzd|week/i.test(durationMatch[0])?7:1))):weeks?14:/týždeň|tyzden|týždňa|tyzdna/.test(t)?7:4;
+ const durationMatch=t.match(/\b(\d{1,2})\s*(dní|dni|dňa|nocí|noci|týžd\S*|tyzd\S*|days?|nights?|weeks?|tagen?|tage?|nächte\S*|wochen?|jours?|nuits?|semaines?|días?|noches?|semanas?|giorni|notti|settimane?|tygodni\S*|nocy|nap(?:ra|ot)?|éjszaka\S*|hét(?:re|ig)?|dny|nocí)(?=$|[^\p{L}])/u);
+ const unit=durationMatch?.[2]||'';
+ const weekUnit=/týžd|tyzd|week|woche|semaine|semana|settiman|tygod|hét/u.test(unit);
+ const nightUnit=/noc|night|nächt|nuit|nott|éjszaka/u.test(unit);
+ const twoWeeks=/dva\s+týžd|dva\s+tyzd|two\s+weeks|zwei\s+wochen|deux\s+semaines|dos\s+semanas|due\s+settimane|dwa\s+tygodnie|két\s+hét/u.test(t);
+ const oneWeek=/týždeň|tyzden|týd(?:en|ne)|a week|one week|eine woche|une semaine|una semana|una settimana|tydzień|egy hét/u.test(t);
+ const requestedDays=durationMatch?Number(durationMatch[1])*(weekUnit?7:1)+(nightUnit?1:0):twoWeeks?14:oneWeek?7:4;
+ const days=Math.min(14,Math.max(2,requestedDays));
  const focus=seaside?'sea':mountain?'nature':city?'city':'general';
  const destinationPresets=[
   {match:/\blond[ýy]n|\blondon/i,label:'Londýn',days:['Westminster, Big Ben a prechádzka popri Temži','British Museum a Covent Garden','Tower of London a Tower Bridge','Hyde Park, Kensington a voľný program']},
@@ -60,6 +66,18 @@ export default function handler(req,res){
  city:['Arrival and orientation in the city','Historic centre and main sights','Museums or galleries of interest','Neighbourhoods and local cuisine','Day trip nearby','Flexible sightseeing and advance bookings','Departure and return'],
  general:['Arrival and orientation at destination','Main sights based on your interests','Activities or an excursion','Relaxed day','Local culture and cuisine','Flexible programme depending on weather','Departure and return']
  };
+ if(locale!=='sk' && !english){
+   const l=locales[locale];
+   const named={
+    'Londýn':['Westminster · Big Ben · Thames','British Museum · Covent Garden','Tower of London · Tower Bridge','Hyde Park · Kensington'],
+    'Rovinj':['Rovinj','Zlatni rt','Pula','Rovinj'],
+    'Gdansk':['Gdańsk · Długi Targ','Motława · Muzeum II Wojny Światowej','Sopot','Europejskie Centrum Solidarności'],
+    'Edinburgh':['Royal Mile','Edinburgh Castle · Grassmarket','Arthur’s Seat','National Museum of Scotland']
+   };
+   const middle=[l[focus],l.excursion,l.rest,l.culture,l.flexible];
+   const translatedItinerary=Array.from({length:days},(_,i)=>({day:i+1,activity:i===0?l.arrival:i===days-1?l.return:destination?named[destination.label][(i-1)%4]:middle[(i-1)%5]}));
+   return json(res,200,{status:'draft_ready',kind:'rule_based_draft',locale,title:l.title,summary:[l.people+': '+travelers,departure&&l.departure+': '+departure,dates&&l.dates+': '+dates].filter(Boolean).join(' · '),interests:[],destination:destination?({'Londýn':'London'}[destination.label]||destination.label):null,steps:[l.destinationCheck,l.availabilityCheck,l.transportCheck,seaside?l.beachCheck:mountain?l.trailCheck:l.hotelCheck,l.paymentCheck],itinerary:translatedItinerary,estimatedDays:days,budgetEur:budget,verifiedPrices:[],bookingAvailable:false,liveSearchAvailable:false,disclaimer:l.disclaimer});
+ }
  if(english){
    for(let i=0;i<itinerary.length;i++){
      const index=i;
@@ -74,5 +92,6 @@ export default function handler(req,res){
    ];
    return json(res,200,{status:'draft_ready',kind:'rule_based_draft',locale:'en',title:'Preliminary travel itinerary',summary:'Trip '+(destination?'to '+({Londýn:'London',Rovinj:'Rovinj',Gdansk:'Gdansk',Edinburgh:'Edinburgh'}[destination.label]||destination.label)+' ':'')+'for '+travelers+' traveler(s)'+(departure?' departing from '+departure:'')+(dates?' during '+dates:'')+'.',interests:[],destination:destination?.label??null,steps:enSteps,itinerary,estimatedDays:days,budgetEur:budget,verifiedPrices:[],bookingAvailable:false,liveSearchAvailable:false,disclaimer:'This is an illustrative rule-based itinerary, not an AI-generated plan. Attractions are suggestions, not verified open venues. Duration may be estimated. Nothing has been booked; prices and availability have not been checked.'});
  }
- return json(res,200,{status:'draft_ready',kind:'rule_based_draft',title:'Predbežný plán tvojej cesty',summary:`Cesta ${destination?'do destinácie '+destination.label+' ':''}pre ${people}${departure?' s odchodom z miesta '+departure:''}${dates?' v termíne '+dates:''}.`,interests,destination:destination?.label??null,steps,itinerary,estimatedDays:days,budgetEur:budget,verifiedPrices:[],bookingAvailable:false,liveSearchAvailable:false,disclaimer:'Toto je ilustračný itinerár podľa pravidiel, nie AI plán. Konkrétne miesta sú návrhy na návštevu, nie overené otvorené prevádzky. Dĺžka môže byť odhadnutá zo zadania. Aktivity nie sú rezervované; ceny a dostupnosť nie sú overené.'});
+ return json(res,200,{status:'draft_ready',kind:'rule_based_draft',locale:'sk',title:'Predbežný plán tvojej cesty',summary:`Cesta ${destination?'do destinácie '+destination.label+' ':''}pre ${people}${departure?' s odchodom z miesta '+departure:''}${dates?' v termíne '+dates:''}.`,interests,destination:destination?.label??null,steps,itinerary,estimatedDays:days,budgetEur:budget,verifiedPrices:[],bookingAvailable:false,liveSearchAvailable:false,disclaimer:'Toto je ilustračný itinerár podľa pravidiel, nie AI plán. Konkrétne miesta sú návrhy na návštevu, nie overené otvorené prevádzky. Dĺžka môže byť odhadnutá zo zadania. Aktivity nie sú rezervované; ceny a dostupnosť nie sú overené.'});
 }
+
