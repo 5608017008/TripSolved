@@ -1,0 +1,34 @@
+name: TripSolved Intake CI
+on:
+  pull_request:
+    paths:
+      - 'apps/tripsolved-api/**'
+      - 'apps/tripsolved-web/**'
+      - '.github/workflows/tripsolved-intake-ci.yml'
+  push:
+    branches:
+      - 'feature/universal-ai-travel-assistant'
+    paths:
+      - 'apps/tripsolved-api/**'
+      - 'apps/tripsolved-web/**'
+      - '.github/workflows/tripsolved-intake-ci.yml'
+permissions:
+  contents: read
+jobs:
+  test-intake:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Run API tests
+        run: node --test apps/tripsolved-api/server.test.mjs
+      - name: Check server syntax
+        run: node --check apps/tripsolved-api/server.mjs
+      - name: Verify web markup and script existence
+        run: |
+          test -s apps/tripsolved-web/index.html
+          grep -q 'id="tripForm"' apps/tripsolved-web/index.html
+          grep -q '/api/trips/intake' apps/tripsolved-web/index.html
