@@ -24,10 +24,10 @@ export default function handler(req,res){
  const days=durationMatch?Math.min(14,Math.max(2,Number(durationMatch[1])*(/týžd|tyzd/.test(durationMatch[0])?7:1))):weeks?14:/týždeň|tyzden|týždňa|tyzdna/.test(t)?7:4;
  const focus=seaside?'sea':mountain?'nature':city?'city':'general';
  const destinationPresets=[
-  {match:/\\blond[ýy]n|\\blondon/i,label:'Londýn',days:['Westminster, Big Ben a prechádzka popri Temži','British Museum a Covent Garden','Tower of London a Tower Bridge','Hyde Park, Kensington a voľný program']},
-  {match:/\\brovinj/i,label:'Rovinj',days:['Historické centrum Rovinja a prístav','Pláže a pobrežná prechádzka pri Zlatnom myse','Výlet do Puly podľa dopravy a záujmu','Oddych pri mori a miestna gastronómia']},
-  {match:/\\bgda[ňn]sk|\\bgdansk/i,label:'Gdansk',days:['Historické centrum a Dlhý trh','Nábrežie Motławy a Múzeum druhej svetovej vojny','Výlet do Sopotu podľa dopravy','Európske centrum Solidarity a voľný program']},
-  {match:/\\bedinburgh/i,label:'Edinburgh',days:['Royal Mile a historické centrum','Edinburgh Castle a Grassmarket','Arthur’s Seat podľa počasia a kondície','National Museum of Scotland a voľný program']}
+  {match:/\blond[ýy]n|\blondon/i,label:'Londýn',days:['Westminster, Big Ben a prechádzka popri Temži','British Museum a Covent Garden','Tower of London a Tower Bridge','Hyde Park, Kensington a voľný program']},
+  {match:/\brovinj/i,label:'Rovinj',days:['Historické centrum Rovinja a prístav','Pláže a pobrežná prechádzka pri Zlatnom myse','Výlet do Puly podľa dopravy a záujmu','Oddych pri mori a miestna gastronómia']},
+  {match:/\bgda[ňn]sk|\bgdansk/i,label:'Gdansk',days:['Historické centrum a Dlhý trh','Nábrežie Motławy a Múzeum druhej svetovej vojny','Výlet do Sopotu podľa dopravy','Európske centrum Solidarity a voľný program']},
+  {match:/\bedinburgh/i,label:'Edinburgh',days:['Royal Mile a historické centrum','Edinburgh Castle a Grassmarket','Arthur’s Seat podľa počasia a kondície','National Museum of Scotland a voľný program']}
  ];
  const destination=destinationPresets.find(p=>p.match.test(t));
  const themes={
