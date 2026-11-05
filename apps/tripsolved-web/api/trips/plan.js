@@ -6,6 +6,9 @@ export default function handler(req,res){
  if(!(req.headers['content-type']||'').toLowerCase().startsWith('application/json'))return json(res,415,{error:'JSON required'});
  const b=req.body;
  if(!b||typeof b!=='object'||Array.isArray(b))return json(res,400,{error:'Invalid request'});
+
+ const locale=typeof b.locale==='string'?b.locale.toLowerCase():'sk';
+ const english=locale==='en';
  const description=typeof b.description==='string'?b.description.trim():'';
  const departure=typeof b.departure==='string'?b.departure.trim():'';
  const dates=typeof b.dates==='string'?b.dates.trim():'';
@@ -13,15 +16,15 @@ export default function handler(req,res){
  const budget=b.budgetEur==null||b.budgetEur===''?null:Number(b.budgetEur);
  if(!description||description.length>3000||departure.length>160||dates.length>160||!Number.isInteger(travelers)||travelers<1||travelers>30||(budget!==null&&(!Number.isFinite(budget)||budget<1||budget>1000000)))return json(res,400,{error:'Invalid trip constraints'});
  const t=description.toLocaleLowerCase('sk');
- const seaside=/mor[eiua]|pláž|plaz|beach|more|oceán|ocean/.test(t);
- const city=/mest|city|pamiatk|múze|muze|galéri|galeri/.test(t);
- const mountain=/hor[ay]|turistik|tatry|hiking|prírod|prirod/.test(t);
+ const seaside=/mor[eiua]|pláž|plaz|beach|seaside|sea|ocean|coast|beachfront|mare|strand|plage|playa|plaża|tenger|moře|oceán/.test(t);
+ const city=/mest|city|cities|museum|museums|sightseeing|historic|landmark|múze|muze|galéri|galeri|stadt|miasto|ville|ciudad|città|város/.test(t);
+ const mountain=/hor[ay]|turistik|tatry|hiking|mountain|nature|trail|trekking|prírod|prirod|berg|montagne|montaña|góry|natura/.test(t);
  const flight=/letieť|leten|lietadl|odlet|flight|airport/.test(t+' '+departure.toLocaleLowerCase('sk'));
  const interests=[...(seaside?['Pláž a kúpanie']:[]),...(city?['Pamiatky a mesto']:[]),...(mountain?['Príroda a turistika']:[])];
  const people=travelers===1?'1 osobu':travelers>=2&&travelers<=4?travelers+' osoby':travelers+' osôb';
- const durationMatch=t.match(/(\d{1,2})\s*(?:dní|dni|dňa|nocí|noci|týždň|tyzdn)/);
+ const durationMatch=t.match(/(\d{1,2})\s*(?:dní|dni|dňa|nocí|noci|týždň|tyzdn|days?|nights?|weeks?|tage?|nächte|jours?|nuits?|días?|giorni|dni|nap|dny)/);
  const weeks=/dva\s+týžd|dva\s+tyzd|2\s*týžd|2\s*tyzd/.test(t);
- const days=durationMatch?Math.min(14,Math.max(2,Number(durationMatch[1])*(/týžd|tyzd/.test(durationMatch[0])?7:1))):weeks?14:/týždeň|tyzden|týždňa|tyzdna/.test(t)?7:4;
+ const days=durationMatch?Math.min(14,Math.max(2,Number(durationMatch[1])*(/týžd|tyzd|week/i.test(durationMatch[0])?7:1))):weeks?14:/týždeň|tyzden|týždňa|tyzdna/.test(t)?7:4;
  const focus=seaside?'sea':mountain?'nature':city?'city':'general';
  const destinationPresets=[
   {match:/\blond[ýy]n|\blondon/i,label:'Londýn',days:['Westminster, Big Ben a prechádzka popri Temži','British Museum a Covent Garden','Tower of London a Tower Bridge','Hyde Park, Kensington a voľný program']},
@@ -45,5 +48,31 @@ export default function handler(req,res){
   seaside?'Vyber ubytovanie podľa skutočnej vzdialenosti od pláže a typu stravy.':mountain?'Over náročnosť trás, počasie a dostupnosť dopravy.':'Vyber ubytovanie podľa polohy, dostupnosti a podmienok.',
   'Pred platbou over konečnú cenu, storno podmienky a cestovné doklady.'
  ];
+ const enPresets={
+ 'Londýn':['Westminster, Big Ben and a walk along the Thames','British Museum and Covent Garden','Tower of London and Tower Bridge','Hyde Park, Kensington and free time'],
+ 'Rovinj':['Rovinj old town and harbour','Beaches and coastal walk at Golden Cape','Optional excursion to Pula','Relaxing by the sea and local cuisine'],
+ 'Gdansk':['Old town and Long Market','Motława waterfront and World War II Museum','Optional trip to Sopot','European Solidarity Centre and free time'],
+ 'Edinburgh':['Royal Mile and historic centre','Edinburgh Castle and Grassmarket','Arthur’s Seat, weather permitting','National Museum of Scotland and free time']
+ };
+ const enThemes={
+ sea:['Arrival, check-in and explore the surroundings','Relax at the beach and explore the coastline','An easy excursion nearby','Flexible day depending on weather','Local culture and cuisine','Extra day for favourite activities','Departure and return'],
+ nature:['Arrival and check the weather forecast','Easy hike suited to your fitness','Natural attractions nearby','Rest day and wet-weather alternative','Full-day excursion with a safety margin','Free day or short walk','Departure and return'],
+ city:['Arrival and orientation in the city','Historic centre and main sights','Museums or galleries of interest','Neighbourhoods and local cuisine','Day trip nearby','Flexible sightseeing and advance bookings','Departure and return'],
+ general:['Arrival and orientation at destination','Main sights based on your interests','Activities or an excursion','Relaxed day','Local culture and cuisine','Flexible programme depending on weather','Departure and return']
+ };
+ if(english){
+   for(let i=0;i<itinerary.length;i++){
+     const index=i;
+     itinerary[i].activity=index===days-1?'Departure and return':index===0?enThemes[focus][0]:destination?enPresets[destination.label][(index-1)%4]:enThemes[focus][1+((index-1)%5)];
+   }
+   const enSteps=[
+     'Confirm the destination and number of nights if not specified.',
+     'Check dates, availability and cancellation policies directly with providers.',
+     flight?'Compare flights including luggage, connections and airport transfers.':'Compare transport options, journey times and connections; check flights for longer distances.',
+     seaside?'Choose accommodation based on actual beach distance and meal plan.':mountain?'Check trail difficulty, weather and local transport.':'Choose accommodation based on location, transport and terms.',
+     'Before paying, verify the final price, cancellation terms and travel documents.'
+   ];
+   return json(res,200,{status:'draft_ready',kind:'rule_based_draft',locale:'en',title:'Preliminary travel itinerary',summary:'Trip '+(destination?'to '+({Londýn:'London',Rovinj:'Rovinj',Gdansk:'Gdansk',Edinburgh:'Edinburgh'}[destination.label]||destination.label)+' ':'')+'for '+travelers+' traveler(s)'+(departure?' departing from '+departure:'')+(dates?' during '+dates:'')+'.',interests:[],destination:destination?.label??null,steps:enSteps,itinerary,estimatedDays:days,budgetEur:budget,verifiedPrices:[],bookingAvailable:false,liveSearchAvailable:false,disclaimer:'This is an illustrative rule-based itinerary, not an AI-generated plan. Attractions are suggestions, not verified open venues. Duration may be estimated. Nothing has been booked; prices and availability have not been checked.'});
+ }
  return json(res,200,{status:'draft_ready',kind:'rule_based_draft',title:'Predbežný plán tvojej cesty',summary:`Cesta ${destination?'do destinácie '+destination.label+' ':''}pre ${people}${departure?' s odchodom z miesta '+departure:''}${dates?' v termíne '+dates:''}.`,interests,destination:destination?.label??null,steps,itinerary,estimatedDays:days,budgetEur:budget,verifiedPrices:[],bookingAvailable:false,liveSearchAvailable:false,disclaimer:'Toto je ilustračný itinerár podľa pravidiel, nie AI plán. Konkrétne miesta sú návrhy na návštevu, nie overené otvorené prevádzky. Dĺžka môže byť odhadnutá zo zadania. Aktivity nie sú rezervované; ceny a dostupnosť nie sú overené.'});
 }
