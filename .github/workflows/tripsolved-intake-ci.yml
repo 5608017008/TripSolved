@@ -24,11 +24,12 @@ jobs:
         with:
           node-version: '22'
       - name: Run API tests
-        run: node --test apps/tripsolved-api/server.test.mjs apps/tripsolved-web/api/trips/intake.test.mjs apps/tripsolved-web/api/trips/plan.test.mjs apps/tripsolved-web/api/trips/ai.test.mjs
+        run: node --test apps/tripsolved-api/server.test.mjs apps/tripsolved-web/api/trips/intake.test.mjs apps/tripsolved-web/api/trips/plan.test.mjs apps/tripsolved-web/api/trips/ai.test.mjs apps/tripsolved-web/api/trips/inquiry.test.mjs
       - name: Check server syntax
         run: |
           node --check apps/tripsolved-api/server.mjs
           node --check apps/tripsolved-web/api/trips/ai.js
+          node --check apps/tripsolved-web/api/trips/inquiry.js
           node --check apps/tripsolved-web/api/trips/plan.js
       - name: Verify web markup and script existence
         run: |
