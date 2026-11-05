@@ -24,3 +24,6 @@ test('rejects empty',()=>assert.equal(invoke('POST',{description:''}).code,400))
 test('rejects invalid traveler count',()=>assert.equal(invoke('POST',{description:'Trip',travelers:0}).code,400));
 test('rejects wrong method',()=>assert.equal(invoke('GET',{}).code,405));
 test('rejects non JSON',()=>assert.equal(invoke('POST',{description:'Trip'},'text/plain').code,415));
+
+test('seven-day seaside itinerary has arrival and departure',()=>{const r=invoke('POST',{description:'Týždeň pri mori',travelers:2});assert.equal(r.body.itinerary.length,7);assert.match(r.body.itinerary[0].activity,/Príchod/);assert.match(r.body.itinerary[6].activity,/Odchod/);});
+test('four-day default itinerary',()=>assert.equal(invoke('POST',{description:'Mestský pobyt',travelers:2}).body.itinerary.length,4));
