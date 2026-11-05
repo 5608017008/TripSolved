@@ -95,8 +95,8 @@ form.addEventListener('submit',async function(event){
 document.getElementById('inquiry').addEventListener('click',function(){
  const subject='TripSolved — žiadosť o individuálne preverenie cesty';
  const body='Dobrý deň,\n\nprosím o individuálne preverenie možností mojej cesty. Rozumiem, že odoslanie žiadosti nie je rezervácia ani záväzná objednávka.\n\n'+exportText+'\n\nProsím o informáciu, či je možné pripraviť ponuku a za akých podmienok.\n';
- window.location.href='mailto:office@nexisdata.eu?subject='+encodeURIComponent(subject)+'&body='+encodeURIComponent(body);
- status.textContent='Otvorí sa e-mailová aplikácia. Žiadosť sa odošle až po tvojom potvrdení v nej.';
+ window.location.href='mailto:procuretrace.eu@gmail.com?subject='+encodeURIComponent(subject)+'&body='+encodeURIComponent(body);
+ status.textContent='Otvorí sa tvoja e-mailová aplikácia s adresou nášho monitorovaného firemného Gmailu. Žiadosť sa odošle až po tvojom potvrdení v nej.';
 });
 document.getElementById('copy').addEventListener('click',async function(){
  try{await navigator.clipboard.writeText(exportText);status.textContent='Skopírované';}
