@@ -31,3 +31,6 @@ test('four-day default itinerary',()=>assert.equal(invoke('POST',{description:'M
 test('explicit 10 days are respected',()=>assert.equal(invoke('POST',{description:'Chceme 10 dní pri mori',travelers:2}).body.itinerary.length,10));
 test('two weeks produce 14 days',()=>assert.equal(invoke('POST',{description:'Chceme dva týždne pri mori',travelers:2}).body.itinerary.length,14));
 test('numeric two weeks produce 14 days',()=>assert.equal(invoke('POST',{description:'Chceme 2 týždne pri mori',travelers:2}).body.itinerary.length,14));
+
+test('London landmarks appear when destination is named',()=>{const r=invoke('POST',{description:'Chceme 4 dni v Londýne',travelers:2});assert.equal(r.body.destination,'Londýn');assert.match(r.body.itinerary[1].activity,/Westminster/);});
+test('Rovinj landmarks appear when destination is named',()=>{const r=invoke('POST',{description:'Chceme 7 dní v Rovinji',travelers:2});assert.equal(r.body.destination,'Rovinj');assert.match(r.body.itinerary[1].activity,/Rovinja/);});
