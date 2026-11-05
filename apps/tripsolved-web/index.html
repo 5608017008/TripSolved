@@ -12,7 +12,7 @@
 <div><label for="travelers">Počet cestujúcich</label><input id="travelers" type="number" min="1" max="30" value="2" required></div>
 <div><label for="budget">Maximálny rozpočet v € (voliteľné)</label><input id="budget" type="number" min="1" max="1000000" step="1" placeholder="1500"></div></div>
 <div class="actions"><button type="submit">Pripraviť zadanie cesty</button><span class="note">Bez platby a bez rezervácie</span></div>
-</form><section id="result" class="result hidden" aria-live="polite"><h2>Tvoje zadanie je pripravené</h2><p>Táto verzia prijíma cestovné požiadavky. Živé ceny, AI plánovanie a rezervácie zatiaľ nie sú dostupné. Zadanie si môžeš skopírovať.</p><dl id="summary"></dl><section id="plan" class="hidden" aria-label="Predbežný cestovný plán"><h3 id="planTitle"></h3><p id="planSummary"></p><section id="aiSection" class="hidden"><h4>AI návrh cesty</h4><p id="aiText" style="white-space:pre-wrap"></p><p class="note" id="aiDisclaimer"></p></section><h4>Program po dňoch (orientačný)</h4><ol id="itinerary"></ol><h4>Čo treba overiť</h4><ul id="planSteps"></ul><p class="note" id="planDisclaimer"></p></section><div class="actions"><button type="button" id="copy">Kopírovať zadanie</button><span id="copyStatus" role="status"></span></div></section></section>
+</form><section id="result" class="result hidden" aria-live="polite"><h2>Tvoje zadanie je pripravené</h2><p>Táto verzia prijíma cestovné požiadavky. Živé ceny, AI plánovanie a rezervácie zatiaľ nie sú dostupné. Zadanie si môžeš skopírovať alebo odoslať nezáväznú žiadosť o individuálne preverenie. Odoslanie žiadosti neznamená potvrdenú službu ani rezerváciu.</p><dl id="summary"></dl><section id="plan" class="hidden" aria-label="Predbežný cestovný plán"><h3 id="planTitle"></h3><p id="planSummary"></p><section id="aiSection" class="hidden"><h4>AI návrh cesty</h4><p id="aiText" style="white-space:pre-wrap"></p><p class="note" id="aiDisclaimer"></p></section><h4>Program po dňoch (orientačný)</h4><ol id="itinerary"></ol><h4>Čo treba overiť</h4><ul id="planSteps"></ul><p class="note" id="planDisclaimer"></p></section><div class="actions"><button type="button" id="copy">Kopírovať zadanie</button><button type="button" id="inquiry">Požiadať o individuálne preverenie cesty</button><span id="copyStatus" role="status"></span></div></section></section>
 <p class="note">TripSolved nezobrazuje neoverené ceny ako aktuálne. Plánovanie s overovaním letov, hotelov a platieb bude sprístupnené až po bezpečnom napojení príslušných služieb.</p></main><footer>TripSolved · Cestovanie podľa teba</footer>
 <script>
 (function(){
@@ -91,6 +91,12 @@ form.addEventListener('submit',async function(event){
  }catch{
    status.textContent='Server nie je pripojený. Zadanie je pripravené lokálne a môžeš ho skopírovať.';
  }finally{clearTimeout(timeout);button.disabled=false;}
+});
+document.getElementById('inquiry').addEventListener('click',function(){
+ const subject='TripSolved — žiadosť o individuálne preverenie cesty';
+ const body='Dobrý deň,\n\nprosím o individuálne preverenie možností mojej cesty. Rozumiem, že odoslanie žiadosti nie je rezervácia ani záväzná objednávka.\n\n'+exportText+'\n\nProsím o informáciu, či je možné pripraviť ponuku a za akých podmienok.\n';
+ window.location.href='mailto:office@nexisdata.eu?subject='+encodeURIComponent(subject)+'&body='+encodeURIComponent(body);
+ status.textContent='Otvorí sa e-mailová aplikácia. Žiadosť sa odošle až po tvojom potvrdení v nej.';
 });
 document.getElementById('copy').addEventListener('click',async function(){
  try{await navigator.clipboard.writeText(exportText);status.textContent='Skopírované';}
