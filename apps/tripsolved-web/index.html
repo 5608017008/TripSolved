@@ -12,7 +12,7 @@
 <div><label for="travelers">Počet cestujúcich</label><input id="travelers" type="number" min="1" max="30" value="2" required></div>
 <div><label for="budget">Maximálny rozpočet v € (voliteľné)</label><input id="budget" type="number" min="1" max="1000000" step="1" placeholder="1500"></div></div>
 <div class="actions"><button type="submit">Pripraviť zadanie cesty</button><span class="note">Bez platby a bez rezervácie</span></div>
-</form><section id="result" class="result hidden" aria-live="polite"><h2>Tvoje zadanie je pripravené</h2><p>Táto verzia prijíma cestovné požiadavky. Živé ceny, AI plánovanie a rezervácie zatiaľ nie sú dostupné. Zadanie si môžeš skopírovať.</p><dl id="summary"></dl><section id="plan" class="hidden" aria-label="Predbežný cestovný plán"><h3 id="planTitle"></h3><p id="planSummary"></p><h4>Program po dňoch (orientačný)</h4><ol id="itinerary"></ol><h4>Čo treba overiť</h4><ul id="planSteps"></ul><p class="note" id="planDisclaimer"></p></section><div class="actions"><button type="button" id="copy">Kopírovať zadanie</button><span id="copyStatus" role="status"></span></div></section></section>
+</form><section id="result" class="result hidden" aria-live="polite"><h2>Tvoje zadanie je pripravené</h2><p>Táto verzia prijíma cestovné požiadavky. Živé ceny, AI plánovanie a rezervácie zatiaľ nie sú dostupné. Zadanie si môžeš skopírovať.</p><dl id="summary"></dl><section id="plan" class="hidden" aria-label="Predbežný cestovný plán"><h3 id="planTitle"></h3><p id="planSummary"></p><section id="aiSection" class="hidden"><h4>AI návrh cesty</h4><p id="aiText" style="white-space:pre-wrap"></p><p class="note" id="aiDisclaimer"></p></section><h4>Program po dňoch (orientačný)</h4><ol id="itinerary"></ol><h4>Čo treba overiť</h4><ul id="planSteps"></ul><p class="note" id="planDisclaimer"></p></section><div class="actions"><button type="button" id="copy">Kopírovať zadanie</button><span id="copyStatus" role="status"></span></div></section></section>
 <p class="note">TripSolved nezobrazuje neoverené ceny ako aktuálne. Plánovanie s overovaním letov, hotelov a platieb bude sprístupnené až po bezpečnom napojení príslušných služieb.</p></main><footer>TripSolved · Cestovanie podľa teba</footer>
 <script>
 (function(){
@@ -26,7 +26,7 @@ form.addEventListener('submit',async function(event){
  if(!form.reportValidity())return;
  const values={};
  for(const [id] of rows) values[id]=document.getElementById(id).value.trim();
- summary.replaceChildren();document.getElementById('plan').classList.add('hidden');
+ summary.replaceChildren();document.getElementById('plan').classList.add('hidden');document.getElementById('aiSection').classList.add('hidden');
  const parts=[];
  for(const [id,label] of rows){
    let value=values[id];if(!value)continue;
@@ -68,6 +68,23 @@ form.addEventListener('submit',async function(event){
        document.getElementById('planDisclaimer').textContent=plan.disclaimer;
        document.getElementById('plan').classList.remove('hidden');
        status.textContent='Orientačný plán pripravený. Živé ceny a rezervácie nie sú dostupné.';
+       // Optional AI is disabled by default; rule-based draft remains usable.
+       try{
+         const aiResponse=await fetch('/api/trips/ai',{
+           method:'POST',headers:{'Content-Type':'application/json'},
+           body:JSON.stringify({description:values.request,departure:values.departure,dates:values.dates,travelers:Number(values.travelers),budgetEur:values.budget?Number(values.budget):null}),signal:controller.signal
+         });
+         if(aiResponse.ok){
+           const ai=await aiResponse.json();
+           if(ai.status==='ai_ready'&&typeof ai.text==='string'){
+             document.getElementById('aiText').textContent=ai.text;
+             document.getElementById('aiDisclaimer').textContent=ai.disclaimer;
+             document.getElementById('aiSection').classList.remove('hidden');
+             exportText+='\n\nAI návrh:\n'+ai.text;
+             status.textContent='AI návrh aj orientačný plán pripravené. Ceny nie sú overené.';
+           }
+         }
+       }catch{};
        exportText+='\n\n'+plan.title+'\n'+(plan.itinerary||[]).map(x=>'Deň '+x.day+': '+x.activity).join('\n')+'\n'+plan.steps.map((x,i)=>(i+1)+'. '+x).join('\n');
      }else{status.textContent='Zadanie spracované. Plán zatiaľ nie je dostupný.';}
    }catch{status.textContent='Zadanie spracované. Plán zatiaľ nie je dostupný.';}
