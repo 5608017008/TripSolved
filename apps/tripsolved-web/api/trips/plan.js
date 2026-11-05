@@ -19,8 +19,8 @@ export default function handler(req,res){
  const flight=/letieť|leten|lietadl|odlet|flight|airport/.test(t+' '+departure.toLocaleLowerCase('sk'));
  const interests=[...(seaside?['Pláž a kúpanie']:[]),...(city?['Pamiatky a mesto']:[]),...(mountain?['Príroda a turistika']:[])];
  const people=travelers===1?'1 osobu':travelers>=2&&travelers<=4?travelers+' osoby':travelers+' osôb';
- const durationMatch=t.match(/(\\d{1,2})\\s*(?:dní|dni|dňa|nocí|noci|týždň|tyzdn)/);
- const weeks=/dva\\s+týžd|dva\\s+tyzd|2\\s*týžd|2\\s*tyzd/.test(t);
+ const durationMatch=t.match(/(\d{1,2})\s*(?:dní|dni|dňa|nocí|noci|týždň|tyzdn)/);
+ const weeks=/dva\s+týžd|dva\s+tyzd|2\s*týžd|2\s*tyzd/.test(t);
  const days=durationMatch?Math.min(14,Math.max(2,Number(durationMatch[1])*(/týžd|tyzd/.test(durationMatch[0])?7:1))):weeks?14:/týždeň|tyzden|týždňa|tyzdna/.test(t)?7:4;
  const focus=seaside?'sea':mountain?'nature':city?'city':'general';
  const themes={
