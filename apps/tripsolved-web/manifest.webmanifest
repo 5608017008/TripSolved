@@ -1,0 +1,18 @@
+{
+  "name": "TripSolved — cestuj po svojom",
+  "short_name": "TripSolved",
+  "description": "Orientačné cestovné plány podľa tvojich predstáv",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#f4f7f8",
+  "theme_color": "#102b36",
+  "icons": [
+    {
+      "src": "/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
