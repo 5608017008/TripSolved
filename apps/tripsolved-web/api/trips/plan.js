@@ -17,7 +17,7 @@ export default function handler(req,res){
  const budget=b.budgetEur==null||b.budgetEur===''?null:Number(b.budgetEur);
  if(!description||description.length>3000||departure.length>160||dates.length>160||!Number.isInteger(travelers)||travelers<1||travelers>30||(budget!==null&&(!Number.isFinite(budget)||budget<1||budget>1000000)))return json(res,400,{error:'Invalid trip constraints'});
  const t=description.toLocaleLowerCase('sk');
- const seaside=/mor[eiua]|pláž|plaz|beach|seaside|sea|ocean|coast|beachfront|mare|strand|plage|playa|plaża|tenger|moře|oceán/.test(t);
+ const seaside=/mor[eiua]|morzem|morza|pláž|plaz|beach|seaside|sea|ocean|coast|beachfront|mare|strand|plage|playa|plaż|tenger|moř|oceán|meer|mer\b|mar\b|spiaggia/.test(t);
  const city=/mest|city|cities|museum|museums|sightseeing|historic|landmark|múze|muze|galéri|galeri|stadt|miasto|ville|ciudad|città|város/.test(t);
  const mountain=/hor[ay]|turistik|tatry|hiking|mountain|nature|trail|trekking|prírod|prirod|berg|montagne|montaña|góry|natura/.test(t);
  const flight=/letieť|leten|lietadl|odlet|flight|airport/.test(t+' '+departure.toLocaleLowerCase('sk'));

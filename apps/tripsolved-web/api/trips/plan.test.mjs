@@ -58,3 +58,9 @@ test('regional locales normalize and unsupported locales use English',()=>{
  assert.equal(invoke('POST',{description:'7 Tage',locale:'de-DE'}).body.locale,'de');
  assert.equal(invoke('POST',{description:'Trip',locale:'unknown'}).body.locale,'en');
 });
+
+test('Polish, French and Spanish seaside requests select beach activities',()=>{
+ for(const [locale,description,expected] of [['pl','7 dni nad morzem',/plaż/],['fr','7 jours à la mer',/plage/],['es','7 días junto al mar',/playa/]]){
+  assert.match(invoke('POST',{locale,description}).body.itinerary[1].activity,expected);
+ }
+});
